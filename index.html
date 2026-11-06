@@ -39,7 +39,7 @@
   /* ---------- Form ---------- */
   .hc-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px 14px}
   .hc-field{min-width:0;position:relative}
-  .hc-field.remark{grid-column:3 / -1}
+  .hc-field.remark{grid-column:4 / -1}
   .hc-field label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
   .req{color:#d32f2f}
   .err{display:block;margin-top:2px;font-size:12px;color:#d32f2f}
@@ -59,7 +59,10 @@
   .ab-list li.none:hover{background:none;color:var(--muted)}
   .ab-list li.act{background:var(--brand-soft);color:var(--brand-dark)}
   .combo-input{padding-right:30px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23667589' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center}
-  .combo-input:disabled{background-color:var(--field-bg);cursor:wait}
+  .combo-input:disabled{background-color:var(--field-bg);cursor:default}
+  .hc-table tbody tr.sun td{background:#fff7e6;color:#b54708}
+  .hc-table tbody tr.sun:hover td{background:#ffefd1}
+  .tag.warn{background:#fde9c8;color:#b54708}
 
   /* ---------- Buttons ---------- */
   .hc-btn{border:1px solid transparent;border-radius:6px;padding:0 14px;height:34px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
@@ -73,7 +76,7 @@
 
   /* ---------- Table ---------- */
   .hc-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:6px}
-  .hc-table{width:100%;border-collapse:collapse;min-width:1180px}
+  .hc-table{width:100%;border-collapse:collapse;min-width:1320px}
   .hc-table th,.hc-table td{padding:11px 14px;text-align:left;font-size:13px;line-height:1.4;vertical-align:middle;border-bottom:1px solid var(--border)}
   .hc-table th{background:var(--brand-soft);color:var(--brand-dark);font-weight:600;white-space:nowrap}
   .hc-table tbody tr:last-child td{border-bottom:0}
@@ -187,6 +190,13 @@
         </div>
 
         <div class="hc-field">
+          <label for="costCenter">Cost center <span class="req">*</span></label>
+          <input id="costCenter" class="combo-input" type="text" autocomplete="off" placeholder="Select division first" disabled>
+          <ul class="ab-list" id="costCenterList" role="listbox" hidden></ul>
+          <small class="err" id="err-costCenter" hidden>Select a cost center.</small>
+        </div>
+
+        <div class="hc-field">
           <label for="actionBy">Action by <span class="req">*</span></label>
           <input id="actionBy" type="text" autocomplete="off" placeholder="Type 3+ letters of employee name / code">
           <ul class="ab-list" id="abList" role="listbox" hidden></ul>
@@ -210,7 +220,7 @@
   <!-- ================= HOLIDAY LIST ================= -->
   <section class="hc-card">
     <h2>Holiday list <span class="count" id="listCount">0</span></h2>
-    <p class="hc-sub">Public holidays and the holidays you have added.</p>
+    <p class="hc-sub">Proposed holidays and the holidays you have added (Republic Day and Independence Day cannot be removed). Maximum 12 holidays – Sundays are shown in orange and are not counted.</p>
     <div id="listBody"></div>
   </section>
 
@@ -233,6 +243,7 @@ const CONFIG = {
   endpoints: {
     states:         { method: 'GET',  base: 'onboarding', url: 'master/states' },
     divisions:      { method: 'GET',  base: 'iconnect',   url: 'orgdept/business-units' },
+    costCenters:    { method: 'GET',  base: 'onboarding', url: 'master/costcenter/' },   // + divisionId
     employeeSearch: { method: 'POST', base: 'onboarding', url: 'master/interviewby', body: 'form' }  // FormData { name }
   },
 
@@ -243,13 +254,15 @@ const CONFIG = {
    Static data
    ===================================================================== */
 const YEAR = CONFIG.year;
+// locked: true  -> no Remove button (cannot be removed)
 const PUBLIC_HOLIDAYS = [
   { name: "New Year's Day",   date: `${YEAR}-01-01` },
-  { name: 'Republic Day',     date: `${YEAR}-01-26` },
+  { name: 'Republic Day',     date: `${YEAR}-01-26`, locked: true },
   { name: 'May Day',          date: `${YEAR}-05-01` },
-  { name: 'Independence Day', date: `${YEAR}-08-15` },
+  { name: 'Independence Day', date: `${YEAR}-08-15`, locked: true },
   { name: 'Gandhi Jayanti',   date: `${YEAR}-10-02` }
 ];
+const MAX_HOLIDAYS = 12;   // Sundays are not counted
 const HOLIDAY_TYPES = ['National Holiday','State Public Holiday','Local Holiday','Restricted / Optional','Company Holiday'];
 const DEFAULT_TYPE = 'State Public Holiday';
 
@@ -258,7 +271,7 @@ const DEFAULT_TYPE = 'State Public Holiday';
    ===================================================================== */
 const S = {
   empCode: '', defaultStateName: '',
-  states: [], divisions: [],
+  states: [], divisions: [], costCenters: [], ccReq: 0,
   holidays: [],
   actionById: '', actionByText: '', actionByList: [], searchTimer: null
 };
@@ -269,9 +282,9 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 /* =====================================================================
    API layer (lookups only)
    ===================================================================== */
-async function api(key, payload) {
+async function api(key, payload, suffix = '') {
   const ep = CONFIG.endpoints[key];
-  const url = CONFIG.bases[ep.base] + ep.url;
+  const url = CONFIG.bases[ep.base] + ep.url + suffix;
   const opts = { method: ep.method, headers: { ...CONFIG.headers() } };
 
   if (ep.method !== 'GET' && payload) {
@@ -315,6 +328,8 @@ function flash(type, text) {
    Helpers
    ===================================================================== */
 const dayOf = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long' }) : '';
+const isSunday = d => !!d && new Date(d + 'T00:00:00').getDay() === 0;
+const countable = () => S.holidays.filter(h => !isSunday(h.date)).length;
 function displayDate(d) {
   const x = new Date(d + 'T00:00:00');
   return `${String(x.getDate()).padStart(2, '0')}-${x.toLocaleDateString('en-IN', { month: 'short' })}-${x.getFullYear()}`;
@@ -383,7 +398,7 @@ function makeCombo(inputId, listId, getItems, onChange) {
   return combo;
 }
 
-let stateCombo, divisionCombo;
+let stateCombo, divisionCombo, costCombo;
 
 /* =====================================================================
    Masters
@@ -409,6 +424,32 @@ async function loadDivisions() {
     flash('error', 'Unable to load divisions. Please refresh the page.');
   }
   divisionCombo.input.disabled = false; divisionCombo.input.placeholder = 'Search / select division';
+}
+
+/* Cost center depends on the selected division */
+function resetCostCenter(placeholder = 'Select division first') {
+  S.ccReq++; S.costCenters = [];
+  costCombo.clear();
+  costCombo.input.disabled = true; costCombo.input.placeholder = placeholder;
+  $('err-costCenter').hidden = true;
+}
+
+async function onDivisionChange(item) {
+  resetCostCenter(item ? 'Loading cost centers...' : 'Select division first');
+  if (!item) return;
+  const req = S.ccReq;
+  try {
+    const list = normalize(await api('costCenters', null, item.id),
+      ['id', 'costCenterId', 'value'], ['name', 'costCenterName', 'label']);
+    if (req !== S.ccReq) return;                       // division changed meanwhile
+    S.costCenters = list;
+  } catch {
+    if (req !== S.ccReq) return;
+    S.costCenters = [];
+    flash('error', 'Unable to load cost centers for this division.');
+  }
+  costCombo.input.disabled = false;
+  costCombo.input.placeholder = S.costCenters.length ? 'Search / select cost center' : 'No cost center found';
 }
 
 /* =====================================================================
@@ -446,10 +487,10 @@ function searchActionBy(query) {
 const sorted = () => [...S.holidays].sort((a, b) => a.date.localeCompare(b.date));
 
 function renderList() {
-  const n = S.holidays.length;
-  $('listCount').textContent = n;
-  $('pillCount').textContent = n;
-  $('pillText').textContent = n === 1 ? 'holiday added' : 'holidays added';
+  const n = S.holidays.length, counted = countable();
+  $('listCount').textContent = `${counted} / ${MAX_HOLIDAYS}`;
+  $('pillCount').textContent = counted;
+  $('pillText').textContent = counted === 1 ? 'holiday added' : 'holidays added';
 
   if (!n) {
     $('listBody').innerHTML = `<div class="hc-empty">
@@ -458,25 +499,27 @@ function renderList() {
     return;
   }
 
-  const rows = sorted().map((h, i) => `
-    <tr>
-      <td>${i + 1}</td>
+  let sn = 0;
+  const rows = sorted().map(h => { const sun = isSunday(h.date); return `
+    <tr class="${sun ? 'sun' : ''}">
+      <td>${sun ? '<span class="muted-dash">—</span>' : ++sn}</td>
       <td>${esc(h.state)}</td>
       <td>${esc(h.division)}</td>
+      <td>${esc(h.costCenter || '—')}</td>
       <td class="nowrap">${esc(displayDate(h.date))}</td>
-      <td>${esc(h.day)}</td>
-      <td><strong>${esc(h.name)}</strong>${h.source === 'Public' ? '<span class="tag">Public</span>' : ''}</td>
+      <td>${esc(h.day)}${sun ? '<span class="tag warn">Sunday – not counted</span>' : ''}</td>
+      <td><strong>${esc(h.name)}</strong>${h.source === 'Public' ? '<span class="tag">Proposed</span>' : ''}</td>
       <td>${esc(h.type)}</td>
       <td>${esc(h.actionBy || '—')}</td>
       <td>${esc(h.remarks || '—')}</td>
-      <td class="center">${h.source === 'Public'
+      <td class="center">${h.locked
         ? '<span class="muted-dash">—</span>'
         : `<button type="button" class="hc-btn remove" data-uid="${esc(h.uid)}">Remove</button>`}</td>
-    </tr>`).join('');
+    </tr>`; }).join('');
 
   $('listBody').innerHTML = `<div class="hc-table-wrap"><table class="hc-table">
     <thead><tr>
-      <th class="w-sno">S.No.</th><th>State</th><th>Division</th><th>Date</th><th>Day</th>
+      <th class="w-sno">S.No.</th><th>State</th><th>Division</th><th>Cost center</th><th>Date</th><th>Day</th>
       <th>Event / Holiday name</th><th>Holiday type</th><th>Action by</th><th>Remark</th><th class="center w-act">Action</th>
     </tr></thead><tbody>${rows}</tbody></table></div>`;
 }
@@ -486,7 +529,7 @@ function renderList() {
    ===================================================================== */
 function validate() {
   const v = {
-    stateId: stateCombo.id, divisionId: divisionCombo.id, date: $('date').value,
+    stateId: stateCombo.id, divisionId: divisionCombo.id, costCenterId: costCombo.id, date: $('date').value,
     name: $('name').value.trim(), type: $('type').value, remarks: $('remarks').value.trim()
   };
   let ok = true;
@@ -494,6 +537,7 @@ function validate() {
 
   show('state', !v.stateId);
   show('division', !v.divisionId);
+  show('costCenter', !v.costCenterId);
   show('date', !v.date || !v.date.startsWith(YEAR + '-'), !v.date ? 'Select a date.' : `Date must be in ${YEAR}.`);
   show('name', !v.name);
   show('actionBy', !S.actionById);
@@ -507,6 +551,12 @@ function addHoliday(ev) {
 
   const stateName = S.states.find(s => s.id === v.stateId)?.name || '';
   const divisionName = S.divisions.find(d => d.id === v.divisionId)?.name || '';
+  const costCenterName = S.costCenters.find(c => c.id === v.costCenterId)?.name || '';
+
+  if (!isSunday(v.date) && countable() >= MAX_HOLIDAYS) {
+    flash('warning', `Maximum ${MAX_HOLIDAYS} holidays allowed (Sundays are not counted). Remove one to add another.`);
+    return;
+  }
 
   const dup = S.holidays.some(x => x.date === v.date && x.state === stateName && x.division === divisionName &&
                                    x.name.toLowerCase() === v.name.toLowerCase());
@@ -514,7 +564,7 @@ function addHoliday(ev) {
 
   S.holidays.push({
     uid: 'h' + Date.now() + Math.random().toString(36).slice(2, 6),
-    state: stateName, division: divisionName, actionBy: S.actionByText.trim(),
+    state: stateName, division: divisionName, costCenter: costCenterName, actionBy: S.actionByText.trim(),
     date: v.date, day: dayOf(v.date), name: v.name, type: v.type, remarks: v.remarks, source: 'Custom'
   });
 
@@ -526,7 +576,7 @@ function addHoliday(ev) {
 function resetForm() {
   stateCombo.clear();
   stateCombo.set(S.states.find(s => s.name.toUpperCase() === S.defaultStateName));
-  divisionCombo.clear();
+  divisionCombo.clear(); resetCostCenter();
   $('date').value = ''; $('day').value = '—';
   $('name').value = ''; $('remarks').value = ''; $('type').value = DEFAULT_TYPE;
   $('actionBy').value = ''; S.actionByText = ''; S.actionById = ''; S.actionByList = []; showAbList(false);
@@ -538,7 +588,7 @@ function resetForm() {
    ===================================================================== */
 async function removeHoliday(uid) {
   const h = S.holidays.find(x => x.uid === uid);
-  if (!h || h.source === 'Public') return;
+  if (!h || h.locked) return;
 
   const r = await Swal.fire({
     title: 'Remove holiday?', text: `${h.name} (${displayDate(h.date)})`, icon: 'warning',
@@ -568,7 +618,7 @@ function init() {
   S.holidays = PUBLIC_HOLIDAYS.map(h => ({
     uid: 'p' + h.date, state: 'All States', division: 'All Divisions', actionBy: '—',
     date: h.date, day: dayOf(h.date), name: h.name, type: 'National Holiday',
-    remarks: 'Public holiday', source: 'Public'
+    remarks: 'Proposed holiday', source: 'Public', locked: !!h.locked
   }));
   renderList();
 
@@ -592,7 +642,12 @@ function init() {
   ['date', 'name'].forEach(id => $(id).addEventListener('input', () => { $('err-' + id).hidden = true; }));
 
   stateCombo = makeCombo('state', 'stateList', () => S.states, it => { if (it) $('err-state').hidden = true; });
-  divisionCombo = makeCombo('division', 'divisionList', () => S.divisions, it => { if (it) $('err-division').hidden = true; });
+  costCombo = makeCombo('costCenter', 'costCenterList', () => S.costCenters, it => { if (it) $('err-costCenter').hidden = true; });
+  divisionCombo = makeCombo('division', 'divisionList', () => S.divisions, it => {
+    if (it) $('err-division').hidden = true;
+    onDivisionChange(it);
+  });
+  resetCostCenter();
 
   loadStates();
   loadDivisions();
