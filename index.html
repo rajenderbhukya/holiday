@@ -57,6 +57,9 @@
   .ab-list li:hover{background:var(--brand-soft);color:var(--brand-dark)}
   .ab-list li.none{color:var(--muted);cursor:default}
   .ab-list li.none:hover{background:none;color:var(--muted)}
+  .ab-list li.act{background:var(--brand-soft);color:var(--brand-dark)}
+  .combo-input{padding-right:30px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23667589' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center}
+  .combo-input:disabled{background-color:var(--field-bg);cursor:wait}
 
   /* ---------- Buttons ---------- */
   .hc-btn{border:1px solid transparent;border-radius:6px;padding:0 14px;height:34px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
@@ -148,7 +151,8 @@
 
         <div class="hc-field">
           <label for="state">State <span class="req">*</span></label>
-          <select id="state"><option value="">Loading states...</option></select>
+          <input id="state" class="combo-input" type="text" autocomplete="off" placeholder="Loading states..." disabled>
+          <ul class="ab-list" id="stateList" role="listbox" hidden></ul>
           <small class="err" id="err-state" hidden>Select a state.</small>
         </div>
 
@@ -177,7 +181,8 @@
         <!-- second row -->
         <div class="hc-field">
           <label for="division">Division <span class="req">*</span></label>
-          <select id="division"><option value="">Loading divisions...</option></select>
+          <input id="division" class="combo-input" type="text" autocomplete="off" placeholder="Loading divisions..." disabled>
+          <ul class="ab-list" id="divisionList" role="listbox" hidden></ul>
           <small class="err" id="err-division" hidden>Select a division.</small>
         </div>
 
@@ -329,46 +334,87 @@ function readEmployee() {
     S.defaultStateName = (data?.user?.state ?? '').toString().trim().toUpperCase();
   } catch { /* ignore */ }
 }
+// "All" / "All Divisions" style entries from the API are not offered in the dropdowns
+const isAllOption = name => /^\s*all(\s+(divisions?|states?|bu|business\s+units?))?\s*$/i.test(name);
+
 const normalize = (list, idKeys, nameKeys) => toList(list)
   .map(o => ({
     id: String(idKeys.map(k => o?.[k]).find(v => v !== undefined && v !== null) ?? ''),
     name: String(nameKeys.map(k => o?.[k]).find(v => v !== undefined && v !== null) ?? '')
-  })).filter(o => o.id && o.name);
+  })).filter(o => o.id && o.name && !isAllOption(o.name));
 
-function fillSelect(sel, items, placeholder) {
-  sel.innerHTML = `<option value="">${esc(placeholder)}</option>` +
-    items.map(i => `<option value="${esc(i.id)}">${esc(i.name)}</option>`).join('');
+/* =====================================================================
+   Searchable dropdown (type to filter, click / Enter to select)
+   ===================================================================== */
+function makeCombo(inputId, listId, getItems, onChange) {
+  const input = $(inputId), list = $(listId);
+  let shown = [], active = -1;
+  const combo = { id: '', input };
+
+  const render = () => {
+    const q = input.value.trim().toLowerCase();
+    shown = getItems().filter(i => !q || i.name.toLowerCase().includes(q));
+    list.innerHTML = shown.length
+      ? shown.map((i, k) => `<li role="option" data-i="${k}" class="${k === active ? 'act' : ''}">${esc(i.name)}</li>`).join('')
+      : '<li class="none">No match found</li>';
+    list.hidden = false;
+    list.querySelector('.act')?.scrollIntoView({ block: 'nearest' });
+  };
+  const pick = item => {
+    input.value = item.name; combo.id = item.id; list.hidden = true; active = -1; onChange(item);
+  };
+
+  combo.set = item => { if (item) { input.value = item.name; combo.id = item.id; } };
+  combo.clear = () => { input.value = ''; combo.id = ''; list.hidden = true; active = -1; };
+
+  input.addEventListener('focus', () => { active = -1; input.select(); render(); });
+  input.addEventListener('click', () => { if (list.hidden) render(); });
+  input.addEventListener('input', () => { combo.id = ''; active = -1; render(); onChange(null); });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (list.hidden) render();
+      if (!shown.length) return;
+      active = e.key === 'ArrowDown' ? (active + 1) % shown.length : (active - 1 + shown.length) % shown.length;
+      render();
+    } else if (e.key === 'Enter' && !list.hidden && active >= 0) {
+      e.preventDefault(); pick(shown[active]);
+    } else if (e.key === 'Escape') { list.hidden = true; }
+  });
+  input.addEventListener('blur', () => { list.hidden = true; if (!combo.id) input.value = ''; });
+  list.addEventListener('mousedown', e => {
+    const li = e.target.closest('li[data-i]');
+    if (li) { e.preventDefault(); pick(shown[+li.dataset.i]); }
+  });
+  return combo;
 }
+
+let stateCombo, divisionCombo;
 
 /* =====================================================================
    Masters
    ===================================================================== */
 async function loadStates() {
-  $('state').disabled = true;
   try {
     S.states = normalize(await api('states'), ['id', 'stateId', 'stateID', 'value'], ['name', 'stateName', 'label']);
-    fillSelect($('state'), S.states, 'Select state / UT');
-    const def = S.states.find(s => s.name.toUpperCase() === S.defaultStateName);
-    if (def) $('state').value = def.id;
+    stateCombo.set(S.states.find(s => s.name.toUpperCase() === S.defaultStateName));
   } catch {
-    S.states = []; fillSelect($('state'), [], 'Select state / UT');
+    S.states = [];
     flash('error', 'Unable to load states. Please refresh the page.');
   }
-  $('state').disabled = false;
+  stateCombo.input.disabled = false; stateCombo.input.placeholder = 'Search / select state';
 }
 
 async function loadDivisions() {
-  $('division').disabled = true;
   try {
     S.divisions = normalize(await api('divisions'),
       ['id', 'buId', 'businessUnitId', 'divisionId', 'divisionID', 'value'],
       ['name', 'buName', 'businessUnitName', 'businessUnit', 'divisionName', 'label']);
-    fillSelect($('division'), S.divisions, 'Select division');
   } catch {
-    S.divisions = []; fillSelect($('division'), [], 'Select division');
+    S.divisions = [];
     flash('error', 'Unable to load divisions. Please refresh the page.');
   }
-  $('division').disabled = false;
+  divisionCombo.input.disabled = false; divisionCombo.input.placeholder = 'Search / select division';
 }
 
 /* =====================================================================
@@ -446,7 +492,7 @@ function renderList() {
    ===================================================================== */
 function validate() {
   const v = {
-    stateId: $('state').value, divisionId: $('division').value, date: $('date').value,
+    stateId: stateCombo.id, divisionId: divisionCombo.id, date: $('date').value,
     name: $('name').value.trim(), type: $('type').value, remarks: $('remarks').value.trim()
   };
   let ok = true;
@@ -503,9 +549,9 @@ async function addHoliday(ev) {
 }
 
 function resetForm() {
-  const def = S.states.find(s => s.name.toUpperCase() === S.defaultStateName);
-  $('state').value = def ? def.id : '';
-  $('division').value = '';
+  stateCombo.clear();
+  stateCombo.set(S.states.find(s => s.name.toUpperCase() === S.defaultStateName));
+  divisionCombo.clear();
   $('date').value = ''; $('day').value = '—';
   $('name').value = ''; $('remarks').value = ''; $('type').value = DEFAULT_TYPE;
   $('actionBy').value = ''; S.actionByText = ''; S.actionById = ''; S.actionByList = []; showAbList(false);
@@ -580,7 +626,9 @@ function init() {
     $('err-actionBy').hidden = true; showAbList(false);
   });
   ['date', 'name'].forEach(id => $(id).addEventListener('input', () => { $('err-' + id).hidden = true; }));
-  ['state', 'division'].forEach(id => $(id).addEventListener('change', () => { $('err-' + id).hidden = true; }));
+
+  stateCombo = makeCombo('state', 'stateList', () => S.states, it => { if (it) $('err-state').hidden = true; });
+  divisionCombo = makeCombo('division', 'divisionList', () => S.divisions, it => { if (it) $('err-division').hidden = true; });
 
   loadStates();
   loadDivisions();
