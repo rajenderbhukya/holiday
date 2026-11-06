@@ -51,7 +51,7 @@
   select:disabled{background:var(--field-bg);cursor:wait}
   .hc-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:flex-end}
 
-  /* ---------- Action-by dropdown ---------- */
+  /* ---------- Dropdown lists ---------- */
   .ab-list{position:absolute;left:0;right:0;top:calc(100% - 2px);z-index:20;margin:0;padding:4px 0;list-style:none;max-height:220px;overflow-y:auto;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 8px 20px rgba(15,40,60,.14)}
   .ab-list li{padding:7px 12px;font-size:13px;cursor:pointer}
   .ab-list li:hover{background:var(--brand-soft);color:var(--brand-dark)}
@@ -144,7 +144,7 @@
   <!-- ================= ADD HOLIDAY ================= -->
   <section class="hc-card">
     <h2>Add holiday</h2>
-    <p class="hc-sub">Pick the date – the day fills in automatically. The holiday is saved as soon as you click Add.</p>
+    <p class="hc-sub">Pick the date – the day fills in automatically. The holiday is added to the list as soon as you click Add.</p>
 
     <form id="holidayForm" novalidate>
       <div class="hc-grid">
@@ -218,28 +218,24 @@
 
 <script>
 /* =====================================================================
-   CONFIG  –  set your API host and endpoint paths here
+   CONFIG  –  API host and endpoint paths
+   (Add / Remove holiday are STATIC for now – no save / delete API)
    ===================================================================== */
 const CONFIG = {
   year: 2027,
 
-  // the two API hosts your AuthService uses (each must end with "/")
   bases: {
-    iconnect:   'https://sso.heterohcl.com/heteroiconnect/',     // AuthService.baseUrl
-    onboarding: 'https://sso.heterohcl.com/directonboarding/'    // AuthService.jobCodeUrls
+    iconnect:   'https://sso.heterohcl.com/heteroiconnect/',
+    onboarding: 'https://sso.heterohcl.com/directonboarding/'
   },
 
-  // base = which host above; url = path on that host
+  // only the lookup APIs are used (states, divisions, employee search)
   endpoints: {
     states:         { method: 'GET',  base: 'onboarding', url: 'master/states' },
     divisions:      { method: 'GET',  base: 'iconnect',   url: 'orgdept/business-units' },
-    // TODO: replace with the real paths of your save / delete holiday APIs
-    employeeSearch: { method: 'POST', base: 'onboarding', url: 'master/interviewby', body: 'form' },  // FormData { name }
-    saveHoliday:    { method: 'POST', base: 'iconnect',   url: 'REPLACE-save-holiday-path',    body: 'json' },
-    deleteHoliday:  { method: 'POST', base: 'iconnect',   url: 'REPLACE-delete-holiday-path',  body: 'json' }
+    employeeSearch: { method: 'POST', base: 'onboarding', url: 'master/interviewby', body: 'form' }  // FormData { name }
   },
 
-  // add auth headers here if your API needs them, e.g. { Authorization: 'Bearer ' + token }
   headers: () => ({})
 };
 
@@ -263,7 +259,7 @@ const DEFAULT_TYPE = 'State Public Holiday';
 const S = {
   empCode: '', defaultStateName: '',
   states: [], divisions: [],
-  holidays: [], removing: null, saving: false,
+  holidays: [],
   actionById: '', actionByText: '', actionByList: [], searchTimer: null
 };
 
@@ -271,7 +267,7 @@ const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* =====================================================================
-   API layer
+   API layer (lookups only)
    ===================================================================== */
 async function api(key, payload) {
   const ep = CONFIG.endpoints[key];
@@ -282,7 +278,7 @@ async function api(key, payload) {
     if (ep.body === 'form') {
       const fd = new FormData();
       Object.entries(payload).forEach(([k, v]) => fd.append(k, v));
-      opts.body = fd;                                    // browser sets multipart header
+      opts.body = fd;
     } else {
       opts.headers['Content-Type'] = 'application/json';
       opts.body = JSON.stringify(payload);
@@ -296,8 +292,6 @@ async function api(key, payload) {
   return data;
 }
 
-const isSuccess = res => res?.status === 1 || res?.status === true || res?.status === 'SUCCESS' || res?.status === 'success';
-
 function toList(res) {
   if (Array.isArray(res)) return res;
   const inner = res?.data ?? res?.result ?? res?.states ?? res?.list ?? [];
@@ -305,7 +299,7 @@ function toList(res) {
 }
 
 /* =====================================================================
-   Toasts / dialogs (SweetAlert2)
+   Toasts (SweetAlert2)
    ===================================================================== */
 function flash(type, text) {
   Swal.fire({
@@ -477,7 +471,7 @@ function renderList() {
       <td>${esc(h.remarks || '—')}</td>
       <td class="center">${h.source === 'Public'
         ? '<span class="muted-dash">—</span>'
-        : `<button type="button" class="hc-btn remove" data-uid="${esc(h.uid)}" ${S.removing === h ? 'disabled' : ''}>${S.removing === h ? 'Removing...' : 'Remove'}</button>`}</td>
+        : `<button type="button" class="hc-btn remove" data-uid="${esc(h.uid)}">Remove</button>`}</td>
     </tr>`).join('');
 
   $('listBody').innerHTML = `<div class="hc-table-wrap"><table class="hc-table">
@@ -488,7 +482,7 @@ function renderList() {
 }
 
 /* =====================================================================
-   Add (saves to API immediately)
+   Add (static – added straight to the table, no API call)
    ===================================================================== */
 function validate() {
   const v = {
@@ -506,46 +500,27 @@ function validate() {
   return ok ? v : null;
 }
 
-async function addHoliday(ev) {
+function addHoliday(ev) {
   ev.preventDefault();
-  if (S.saving) return;
   const v = validate();
   if (!v) return;
 
   const stateName = S.states.find(s => s.id === v.stateId)?.name || '';
   const divisionName = S.divisions.find(d => d.id === v.divisionId)?.name || '';
-  const actionByLabel = S.actionByText.trim();
 
   const dup = S.holidays.some(x => x.date === v.date && x.state === stateName && x.division === divisionName &&
                                    x.name.toLowerCase() === v.name.toLowerCase());
   if (dup) { flash('warning', `"${v.name}" on ${displayDate(v.date)} is already added.`); return; }
 
-  const holiday = {
+  S.holidays.push({
     uid: 'h' + Date.now() + Math.random().toString(36).slice(2, 6),
-    state: stateName, division: divisionName, actionBy: actionByLabel,
+    state: stateName, division: divisionName, actionBy: S.actionByText.trim(),
     date: v.date, day: dayOf(v.date), name: v.name, type: v.type, remarks: v.remarks, source: 'Custom'
-  };
+  });
 
-  const payload = {
-    empID: S.empCode, state: holiday.state, division: holiday.division,
-    actionBy: S.actionById, actionByName: actionByLabel, year: YEAR,
-    holidayDate: holiday.date, day: holiday.day, holidayName: holiday.name,
-    holidayType: holiday.type, remarks: holiday.remarks
-  };
-
-  S.saving = true; $('btnAdd').disabled = true; $('btnAdd').textContent = 'Saving...';
-  try {
-    const res = await api('saveHoliday', payload);
-    if (isSuccess(res)) {
-      S.holidays.push(holiday);                          // shown only after API success
-      renderList();
-      flash('success', res?.message || `"${holiday.name}" saved successfully.`);
-      resetForm();
-    } else {
-      flash('error', res?.message || 'Unable to save. Please try again.');
-    }
-  } catch { flash('error', 'Server error. Please try again.'); }
-  S.saving = false; $('btnAdd').disabled = false; $('btnAdd').textContent = '+ Add holiday';
+  renderList();
+  flash('success', `"${v.name}" added successfully.`);
+  resetForm();
 }
 
 function resetForm() {
@@ -559,11 +534,11 @@ function resetForm() {
 }
 
 /* =====================================================================
-   Remove (calls API)
+   Remove (static – removed from the table after confirmation, no API call)
    ===================================================================== */
 async function removeHoliday(uid) {
   const h = S.holidays.find(x => x.uid === uid);
-  if (!h || h.source === 'Public' || S.removing || S.saving) return;
+  if (!h || h.source === 'Public') return;
 
   const r = await Swal.fire({
     title: 'Remove holiday?', text: `${h.name} (${displayDate(h.date)})`, icon: 'warning',
@@ -573,20 +548,9 @@ async function removeHoliday(uid) {
   });
   if (!r.isConfirmed) return;
 
-  S.removing = h; renderList();
-  try {
-    const res = await api('deleteHoliday', {
-      empID: S.empCode, state: h.state, division: h.division, year: YEAR,
-      holidayDate: h.date, holidayName: h.name
-    });
-    if (isSuccess(res)) {
-      S.holidays = S.holidays.filter(x => x !== h);
-      flash('success', res?.message || `"${h.name}" removed.`);
-    } else {
-      flash('error', res?.message || 'Unable to remove. Please try again.');
-    }
-  } catch { flash('error', 'Server error. Please try again.'); }
-  S.removing = null; renderList();
+  S.holidays = S.holidays.filter(x => x.uid !== uid);
+  renderList();
+  flash('success', `"${h.name}" removed.`);
 }
 
 /* =====================================================================
