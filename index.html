@@ -445,23 +445,20 @@
 
 <script>
 /* =====================================================================
-   AUTH  –  temporary static login (replace with a real API later)
-   Allowed Employee IDs : 13431, 13066, 10515, 13457
-   Password (all IDs)   : hetero
-   Session is kept in localStorage ("Remember me" ticked) or
-   sessionStorage (not ticked). The holiday page is only shown while a
-   valid session exists – otherwise the login page is shown.
+   AUTH  –  real login through the iConnect API
+   POST  {iconnect base}/loginaction/login   (see CONFIG below)
+   Success : res.isRegular === false  OR  res.status === 1
+   Failure : res.status === 0  (Invalid Credentials)
+   The session is kept in localStorage ("Remember me" ticked) or
+   sessionStorage (not ticked) and expires after AUTH.sessionSeconds.
+   The holiday page is only shown while a valid session exists.
    ===================================================================== */
 const AUTH = {
-  users: {                    // empID : password
-    '13431': 'hetero',
-    '13066': 'hetero',
-    '10515': 'hetero',
-    '13457': 'hetero'
-  },
-  userKey: 'userData',        // same key the holiday page already reads
+  userKey: 'userData',        // same keys the iConnect app uses
   flagKey: 'hcLoggedIn',
-  rememberKey: 'hcRememberedEmp'
+  expiryKey: 'hcSessionExpiry',
+  rememberKey: 'hcRememberedEmp',
+  sessionSeconds: 1800        // 30 minutes (same as saveUserSession(res, 1800))
 };
 
 const store = {
@@ -476,26 +473,43 @@ function decodeUser() {
   try { return JSON.parse(decodeURIComponent(window.atob(store.get(AUTH.userKey) || ''))); }
   catch { return null; }
 }
-
-// Guard: true only when the flag AND a valid user record are present
-function isAuthenticated() {
-  if (store.get(AUTH.flagKey) !== 'true') return false;
+function decodeKey(k) {
+  try { return decodeURIComponent(window.atob(store.get(k) || '')); } catch { return ''; }
+}
+function currentEmp() {
   const u = decodeUser();
-  return !!u && Object.prototype.hasOwnProperty.call(AUTH.users, String(u.user?.empID));
+  if (u?.user?.empID) return String(u.user.empID);
+  try { return JSON.parse(decodeKey('loginData')).userName || ''; } catch { return ''; }
 }
 
-function saveSession(empId, remember) {
-  const payload = { user: { empID: empId, name: 'Hetero User', state: '' }, loginAt: new Date().toISOString() };
-  store.set(AUTH.userKey, window.btoa(encodeURIComponent(JSON.stringify(payload))), remember);
+function clearSession() {
+  ['userData', 'isRegular', 'currentDate', 'loginData', AUTH.flagKey, AUTH.expiryKey].forEach(k => store.remove(k));
+}
+
+// Guard: valid only when the flag, a user record and an unexpired time are present
+function isAuthenticated() {
+  if (store.get(AUTH.flagKey) !== 'true') return false;
+  const exp = Number(store.get(AUTH.expiryKey) || 0);
+  if (!exp || Date.now() > exp) { clearSession(); return false; }
+  return !!decodeUser();
+}
+
+// Same storage keys as the Angular login component (password is NOT stored)
+function saveSession(res, userName, remember) {
+  const enc = v => window.btoa(encodeURIComponent(v));
+  store.set(AUTH.userKey, enc(JSON.stringify(res)), remember);
+  store.set('isRegular', enc(res.isRegular), remember);
+  if (res.user?.todaydate) store.set('currentDate', enc(res.user.todaydate), remember);
+  store.set('loginData', enc(JSON.stringify({ userName })), remember);
   store.set(AUTH.flagKey, 'true', remember);
+  store.set(AUTH.expiryKey, String(Date.now() + AUTH.sessionSeconds * 1000), remember);
   try {
-    if (remember) localStorage.setItem(AUTH.rememberKey, empId); else localStorage.removeItem(AUTH.rememberKey);
+    if (remember) localStorage.setItem(AUTH.rememberKey, userName); else localStorage.removeItem(AUTH.rememberKey);
   } catch {}
 }
 
 function logout() {
-  store.remove(AUTH.userKey);
-  store.remove(AUTH.flagKey);
+  clearSession();
   location.reload();            // back to the login page
 }
 
@@ -524,7 +538,7 @@ function initLogin() {
   const emp = $('lgEmp'), pass = $('lgPass'), alertBox = $('lgAlert');
 
   // pre-fill remembered employee id
-  try { const r = localStorage.getItem(AUTH.rememberKey); if (r && Object.prototype.hasOwnProperty.call(AUTH.users, r)) emp.value = r; } catch {}
+  try { const r = localStorage.getItem(AUTH.rememberKey); if (r) emp.value = r; } catch {}
   (emp.value ? pass : emp).focus();
 
   const mark = (input, errId, bad) => { input.classList.toggle('bad', bad); $(errId).hidden = !bad; };
@@ -543,25 +557,54 @@ function initLogin() {
 
   $('lgForgot').addEventListener('click', () => flash('info', 'Please enter your iConnect password.'));
 
-  $('loginForm').addEventListener('submit', e => {
+  const btn = $('lgSubmit');
+  const setBusy = on => { btn.disabled = on; btn.textContent = on ? 'SIGNING IN...' : 'SIGN IN'; };
+  const fail = msg => { alertBox.textContent = msg; alertBox.hidden = false; };
+
+  $('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
+    if (btn.disabled) return;
     const id = emp.value.trim(), pw = pass.value;
 
     mark(emp, 'lgEmpErr', !id);
     mark(pass, 'lgPassErr', !pw);
     if (!id || !pw) return;
 
-    if (!Object.prototype.hasOwnProperty.call(AUTH.users, id) || AUTH.users[id] !== pw) {
-      alertBox.textContent = 'Invalid Employee ID or password. Please try again.';
-      alertBox.hidden = false;
-      pass.value = ''; pass.focus();
-      return;
-    }
+    alertBox.hidden = true;
+    setBusy(true);
+    try {
+      const F = CONFIG.loginFields;
+      const res = await api('login', { [F.user]: id, [F.pass]: pw, ...CONFIG.loginExtra });
 
-    saveSession(id, $('lgRemember').checked);
-    showApp();
-    flash('success', 'Login successful. Welcome!');
+      if (res && (res.isRegular === false || res.status === 1)) {
+        saveSession(res, id, $('lgRemember').checked);
+        showApp();
+        flash('success', 'Login successful. Welcome!');
+      } else if (res && res.status === 0) {
+        invalidLogin();
+      } else {
+        fail('Unable to sign in. Please try again.');
+      }
+    } catch (err) {
+      if (err?.data?.status === 0) invalidLogin();
+      else if (err?.status) {                                   // server answered with an HTTP error
+        const detail = err.data?.message || err.data?.error || (typeof err.data === 'string' ? err.data : '');
+        fail(`Login failed (server error ${err.status}).${detail ? ' ' + String(detail).slice(0, 120) : ''} Please try again.`);
+        flash('error', `Login service returned error ${err.status}.`);
+      } else {                                                   // no response at all (network / CORS)
+        fail('Unable to reach the server. Please check your connection and try again.');
+        flash('error', 'Login service is not reachable.');
+      }
+    } finally {
+      setBusy(false);
+    }
   });
+
+  function invalidLogin() {
+    Swal.fire({ icon: 'error', title: 'Login Failed', text: 'Invalid Credentials!', showConfirmButton: false, timer: 2000 });
+    fail('Invalid Employee ID or password. Please try again.');
+    pass.value = ''; pass.focus();
+  }
 }
 
 /* Show the holiday UI (only reached after a valid login) */
@@ -570,7 +613,7 @@ function showApp() {
   $('loginView').hidden = true;
   $('app').hidden = false;
   document.body.classList.remove('is-login');
-  $('userLabel').textContent = 'Emp ID: ' + (decodeUser()?.user?.empID ?? '');
+  $('userLabel').textContent = 'Emp ID: ' + currentEmp();
   if (!appStarted) { appStarted = true; init(); }   // holiday page + API calls start only after login
 }
 
@@ -598,8 +641,13 @@ const CONFIG = {
     states:         { method: 'GET',  base: 'onboarding', url: 'master/states' },
     divisions:      { method: 'GET',  base: 'iconnect',   url: 'orgdept/business-units' },
     costCenters:    { method: 'GET',  base: 'onboarding', url: 'master/costcenter/' },   // + divisionId
-    employeeSearch: { method: 'POST', base: 'onboarding', url: 'master/interviewby', body: 'form' }  // FormData { name }
+    employeeSearch: { method: 'POST', base: 'onboarding', url: 'master/interviewby', body: 'form' },  // FormData { name }
+    login:          { method: 'POST', base: 'iconnect',   url: 'loginaction/login' }              // JSON { userName, password }
   },
+
+  // request body of the login API: { [user]: empId, [pass]: password, ...extra }
+  loginFields: { user: 'userName', pass: 'password' },
+  loginExtra: { application: 'desktop' },
 
   headers: () => ({})
 };
@@ -654,7 +702,7 @@ async function api(key, payload, suffix = '') {
   const r = await fetch(url, opts);
   const text = await r.text();
   let data; try { data = text ? JSON.parse(text) : null; } catch { data = text; }
-  if (!r.ok) throw Object.assign(new Error('HTTP ' + r.status), { data });
+  if (!r.ok) throw Object.assign(new Error('HTTP ' + r.status), { data, status: r.status });
   return data;
 }
 
