@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>2027 Holiday Collection</title>
+  <title>Holiday Collection</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
@@ -25,1326 +25,235 @@
       --danger-soft: #fdf0ef;
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box
-    }
+    *, *::before, *::after { box-sizing: border-box }
+    html, body, * { scrollbar-width: none; -ms-overflow-style: none }
+    *::-webkit-scrollbar { display: none; width: 0; height: 0 }
+    [hidden] { display: none !important }
 
-    /* hide every scrollbar but keep scrolling working */
-    html,
-    body,
-    * {
-      scrollbar-width: none;
-      -ms-overflow-style: none
-    }
+    body { margin: 0; background: #f5f8fb; color: var(--ink); font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif }
+    body.is-login { background: #fff }
+    #app { display: contents }
 
-    *::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0
-    }
-
-    [hidden] {
-      display: none !important
-    }
-
-    body {
-      margin: 0;
-      background: #f5f8fb;
-      color: var(--ink);
-      font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif
-    }
-
-    body.is-login {
-      background: #fff
-    }
-
-    #app {
-      display: contents
-    }
-
-    /* lets the header stay stuck to the top of the whole page */
-
-    /* =====================================================================
-     LOGIN PAGE
-     ===================================================================== */
+    /* ===== LOGIN ===== */
     .lg-page {
-      --lg-teal: #2ec4b6;
-      --lg-teal-dark: #25a99c;
-      --lg-deep: #12766b;
-      --lg-panel: #84e0d2;
-      --lg-line: #bfeae4;
-      --lg-card: #f6fcfb;
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      background: #fff;
-      font-family: 'Noto Sans', 'IBM Plex Sans', Arial, sans-serif;
-      color: var(--lg-deep)
+      --lg-teal: #2ec4b6; --lg-teal-dark: #25a99c; --lg-deep: #12766b; --lg-panel: #84e0d2; --lg-line: #bfeae4; --lg-card: #f6fcfb;
+      position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; background: #fff;
+      font-family: 'Noto Sans', 'IBM Plex Sans', Arial, sans-serif; color: var(--lg-deep)
     }
-
-    .lg-bg {
-      position: absolute;
-      inset: 0;
-      background: var(--lg-panel);
-      clip-path: polygon(58% 0, 100% 0, 100% 100%, 46% 100%);
-      pointer-events: none
-    }
-
-    /* right panel: content + illustration */
-    .lg-right {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      bottom: 0;
-      left: 61%;
-      right: 3.5vw;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      padding: 6vh 0 3vh;
-      color: #0b4f47
-    }
-
-    .lg-info h2 {
-      margin: 0 0 8px;
-      font-size: 32px;
-      font-weight: 700;
-      line-height: 1.2;
-      color: #0b4f47
-    }
-
-    .lg-info p {
-      margin: 0;
-      max-width: 52ch;
-      font-size: 15px;
-      line-height: 1.6;
-      color: #14625a
-    }
-
-    .lg-art {
-      flex: 1 1 0;
-      min-height: 0;
-      width: 100%;
-      pointer-events: none
-    }
-
-    @media (max-height:560px) {
-      .lg-info p {
-        display: none
-      }
-    }
-
-    .lg-card {
-      position: relative;
-      z-index: 2;
-      width: min(480px, calc(100% - 32px));
-      margin-left: 9vw;
-      padding: 36px 40px 34px;
-      background: var(--lg-card);
-      border: 1px solid var(--lg-line);
-      border-radius: 28px;
-      box-shadow: 0 8px 24px rgba(46, 196, 182, .18)
-    }
-
-    .lg-card h1 {
-      margin: 0;
-      text-align: center;
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: .2px;
-      color: var(--lg-deep)
-    }
-
-    .lg-sub {
-      margin: 6px 0 26px;
-      text-align: center;
-      font-size: 15px;
-      color: #3d5b57
-    }
-
-    .lg-field {
-      margin-bottom: 18px
-    }
-
-    .lg-field label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--lg-deep)
-    }
-
-    .lg-field .req {
-      color: #e00;
-      font-size: 18px;
-      margin-left: 2px
-    }
-
-    .lg-input {
-      display: block;
-      width: 100%;
-      height: 52px;
-      padding: 0 18px;
-      font: inherit;
-      font-size: 16px;
-      color: #1b2a3a;
-      background: #fff;
-      border: 1px solid var(--lg-line);
-      border-radius: 14px;
-      transition: border-color .15s, box-shadow .15s
-    }
-
-    .lg-input::placeholder {
-      color: #8aa5a1
-    }
-
-    .lg-input:focus {
-      outline: 0;
-      border-color: var(--lg-teal);
-      box-shadow: 0 0 0 3px rgba(46, 196, 182, .22)
-    }
-
-    .lg-input.bad {
-      border-color: #d32f2f
-    }
-
-    .lg-pass {
-      display: flex;
-      align-items: stretch
-    }
-
-    .lg-pass .lg-input {
-      border-radius: 14px 0 0 14px;
-      border-right: 0
-    }
-
-    .lg-eye {
-      flex: 0 0 58px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      background: #effaf8;
-      color: var(--lg-deep);
-      border: 1px solid var(--lg-line);
-      border-radius: 0 14px 14px 0;
-      transition: background .15s
-    }
-
-    .lg-eye:hover {
-      background: #dff5f1
-    }
-
-    .lg-eye:focus-visible,
-    .lg-btn:focus-visible,
-    .lg-forgot:focus-visible {
-      outline: 3px solid rgba(46, 196, 182, .45);
-      outline-offset: 2px
-    }
-
-    .lg-error {
-      display: block;
-      margin-top: 6px;
-      font-size: 13px;
-      color: #d32f2f
-    }
-
-    .lg-alert {
-      margin: 0 0 14px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: #fdf0ef;
-      color: #b42318;
-      font-size: 14px;
-      border: 1px solid #f6cfcb
-    }
-
-    .lg-check {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 4px 0 14px 12px;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--lg-deep);
-      cursor: pointer;
-      width: fit-content
-    }
-
-    .lg-check input {
-      display: inline-block;
-      width: 19px;
-      height: 19px;
-      margin: 0;
-      padding: 0;
-      accent-color: var(--lg-deep);
-      cursor: pointer
-    }
-
-    .lg-btn {
-      display: block;
-      width: 100%;
-      height: 54px;
-      border: 0;
-      border-radius: 12px;
-      cursor: pointer;
-      font: inherit;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: .5px;
-      color: #fff;
-      background: var(--lg-teal);
-      transition: background .15s
-    }
-
-    .lg-btn:hover {
-      background: var(--lg-teal-dark)
-    }
-
-    .lg-forgot-row {
-      margin-top: 24px;
-      text-align: right;
-      padding-right: 14px
-    }
-
-    .lg-forgot {
-      background: none;
-      border: 0;
-      padding: 0;
-      font: inherit;
-      font-size: 16px;
-      font-weight: 600;
-      color: #1a9a8c;
-      text-decoration: underline;
-      cursor: pointer
-    }
-
-    .lg-forgot:hover {
-      color: var(--lg-deep)
-    }
-
+    .lg-bg { position: absolute; inset: 0; background: var(--lg-panel); clip-path: polygon(58% 0, 100% 0, 100% 100%, 46% 100%); pointer-events: none }
+    .lg-right { position: absolute; z-index: 1; top: 0; bottom: 0; left: 61%; right: 3.5vw; display: flex; flex-direction: column; gap: 18px; padding: 6vh 0 3vh; color: #0b4f47 }
+    .lg-info h2 { margin: 0 0 8px; font-size: 32px; font-weight: 700; line-height: 1.2; color: #0b4f47 }
+    .lg-info p { margin: 0; max-width: 52ch; font-size: 15px; line-height: 1.6; color: #14625a }
+    .lg-art { flex: 1 1 0; min-height: 0; width: 100%; pointer-events: none }
+    @media (max-height:560px) { .lg-info p { display: none } }
+    .lg-card { position: relative; z-index: 2; width: min(480px, calc(100% - 32px)); margin-left: 9vw; padding: 36px 40px 34px; background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: 28px; box-shadow: 0 8px 24px rgba(46, 196, 182, .18) }
+    .lg-card h1 { margin: 0; text-align: center; font-size: 30px; font-weight: 700; letter-spacing: .2px; color: var(--lg-deep) }
+    .lg-sub { margin: 6px 0 26px; text-align: center; font-size: 15px; color: #3d5b57 }
+    .lg-field { margin-bottom: 18px }
+    .lg-field label { display: block; margin-bottom: 8px; font-size: 15px; font-weight: 600; color: var(--lg-deep) }
+    .lg-field .req { color: #e00; font-size: 18px; margin-left: 2px }
+    .lg-input { display: block; width: 100%; height: 52px; padding: 0 18px; font: inherit; font-size: 16px; color: #1b2a3a; background: #fff; border: 1px solid var(--lg-line); border-radius: 14px; transition: border-color .15s, box-shadow .15s }
+    .lg-input::placeholder { color: #8aa5a1 }
+    .lg-input:focus { outline: 0; border-color: var(--lg-teal); box-shadow: 0 0 0 3px rgba(46, 196, 182, .22) }
+    .lg-input.bad { border-color: #d32f2f }
+    .lg-pass { display: flex; align-items: stretch }
+    .lg-pass .lg-input { border-radius: 14px 0 0 14px; border-right: 0 }
+    .lg-eye { flex: 0 0 58px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #effaf8; color: var(--lg-deep); border: 1px solid var(--lg-line); border-radius: 0 14px 14px 0; transition: background .15s }
+    .lg-eye:hover { background: #dff5f1 }
+    .lg-eye:focus-visible, .lg-btn:focus-visible, .lg-forgot:focus-visible { outline: 3px solid rgba(46, 196, 182, .45); outline-offset: 2px }
+    .lg-error { display: block; margin-top: 6px; font-size: 13px; color: #d32f2f }
+    .lg-alert { margin: 0 0 14px; padding: 10px 14px; border-radius: 10px; background: #fdf0ef; color: #b42318; font-size: 14px; border: 1px solid #f6cfcb }
+    .lg-check { display: flex; align-items: center; gap: 10px; margin: 4px 0 14px 12px; font-size: 16px; font-weight: 600; color: var(--lg-deep); cursor: pointer; width: fit-content }
+    .lg-check input { display: inline-block; width: 19px; height: 19px; margin: 0; padding: 0; accent-color: var(--lg-deep); cursor: pointer }
+    .lg-btn { display: block; width: 100%; height: 54px; border: 0; border-radius: 12px; cursor: pointer; font: inherit; font-size: 20px; font-weight: 700; letter-spacing: .5px; color: #fff; background: var(--lg-teal); transition: background .15s }
+    .lg-btn:hover { background: var(--lg-teal-dark) }
+    .lg-btn:disabled { opacity: .7; cursor: wait }
+    .lg-forgot-row { margin-top: 24px; text-align: right; padding-right: 14px }
+    .lg-forgot { background: none; border: 0; padding: 0; font: inherit; font-size: 16px; font-weight: 600; color: #1a9a8c; text-decoration: underline; cursor: pointer }
+    .lg-forgot:hover { color: var(--lg-deep) }
     @media (max-width:1000px) {
-      .lg-right {
-        display: none
-      }
-
-      .lg-bg {
-        clip-path: none;
-        background: linear-gradient(160deg, #e6f8f5, #84e0d2)
-      }
-
-      .lg-card {
-        margin: 0 auto
-      }
-    }
-
-    @media (max-width:480px) {
-      .lg-card {
-        padding: 28px 20px
-      }
-
-      .lg-card h1 {
-        font-size: 24px
-      }
-    }
-
-    /* ---------- Header ---------- */
-    .hc-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--brand);
-      color: #fff;
-      padding: 12px 0;
-      box-shadow: 0 2px 10px rgba(15, 40, 60, .18)
-    }
-
-    .hc-header-inner {
-      max-width: 1680px;
-      margin: 0 auto;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap
-    }
-
-    .hc-header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0
-    }
-
-    .hc-header-left h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 600;
-      line-height: 1.2;
-      color: #fff
-    }
-
-    .hc-header-left p {
-      margin: 2px 0 0;
-      font-size: 13px;
-      color: rgba(255, 255, 255, .92)
-    }
-
-    .hc-logo {
-      flex-shrink: 0;
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .2);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center
-    }
-
-    .hc-header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap
-    }
-
-    .hc-user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #fff;
-      margin-right: 4px
-    }
-
-    .hc-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #fff;
-      color: var(--brand);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: .3px
-    }
-
-    .hc-user-txt {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.25
-    }
-
-    .hc-user-txt strong {
-      font-size: 14px;
-      font-weight: 600
-    }
-
-    .hc-user-txt small {
-      font-size: 12px;
-      color: rgba(255, 255, 255, .85)
-    }
-
-    .hc-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #fff;
-      color: var(--brand);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 14px;
-      border-radius: 6px
-    }
-
-    .hc-pill strong {
-      font-weight: 700;
-      font-size: 14px
-    }
-
-    .hc-btn.logout {
-      background: transparent;
-      color: #fff;
-      border-color: rgba(255, 255, 255, .7)
-    }
-
-    .hc-btn.logout:hover {
-      background: rgba(255, 255, 255, .15)
-    }
-
-    /* ---------- Layout / cards ---------- */
-    .hc-container {
-      max-width: 1680px;
-      margin: 0 auto;
-      padding: 14px 16px 24px
-    }
-
-    .hc-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-top: 4px solid var(--brand);
-      border-radius: 6px;
-      padding: 12px 16px 14px;
-      margin-bottom: 14px
-    }
-
-    .hc-card h2 {
-      margin: 0 0 2px;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--brand);
-      display: flex;
-      align-items: center;
-      gap: 10px
-    }
-
-    .hc-sub {
-      margin: 0 0 10px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5
-    }
-
-    .count {
-      font-size: 12px;
-      font-weight: 600;
-      background: var(--brand-soft);
-      color: var(--brand);
-      padding: 1px 8px;
-      border-radius: 12px
-    }
-
-    /* "Your details" card stays fixed under the header while the page scrolls */
-    .hc-card.pinned {
-      position: sticky;
-      top: var(--hdr-h, 67px);
-      z-index: 90;
-      box-shadow: 0 6px 12px -6px rgba(15, 40, 60, .18)
-    }
-
-    @media (max-width:900px),
-    (max-height:600px) {
-      .hc-card.pinned {
-        position: static;
-        box-shadow: none
-      }
-    }
-
-    /* ---------- Form ---------- */
-    .hc-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px 14px
-    }
-
-    .hc-field {
-      min-width: 0;
-      position: relative
-    }
-
-    .hc-grid.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr))
-    }
-
-    .hc-grid.row2 {
-      grid-template-columns: 1fr .8fr 1.5fr 1fr 1.6fr
-    }
-
-    .hc-field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 4px
-    }
-
-    .req {
-      color: #d32f2f
-    }
-
-    .err {
-      display: block;
-      margin-top: 2px;
-      font-size: 12px;
-      color: #d32f2f
-    }
-
-    .hint {
-      display: block;
-      margin-top: 2px;
-      font-size: 12px;
-      color: var(--muted)
-    }
-
-    #app input,
-    #app select {
-      display: block;
-      width: 100%;
-      height: 34px;
-      margin: 0;
-      padding: 0 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font: inherit;
-      font-size: 14px;
-      color: var(--ink);
-      background: #fff;
-      transition: border-color .15s, box-shadow .15s
-    }
-
-    #app input::placeholder {
-      color: #8493a5
-    }
-
-    #app input:focus,
-    #app select:focus {
-      outline: 0;
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px rgba(0, 114, 188, .15)
-    }
-
-    #app input[readonly] {
-      background: var(--field-bg);
-      color: var(--muted);
-      cursor: default
-    }
-
-    #app input.locked {
-      color: var(--ink);
-      font-weight: 500;
-      cursor: not-allowed
-    }
-
-    #app select:disabled {
-      background: var(--field-bg);
-      cursor: wait
-    }
-
-    .hc-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-      justify-content: flex-end
-    }
-
-    /* ---------- Dropdown lists ---------- */
-    .ab-list {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: calc(100% - 2px);
-      z-index: 20;
-      margin: 0;
-      padding: 4px 0;
-      list-style: none;
-      max-height: 220px;
-      overflow-y: auto;
-      scrollbar-width: none;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      box-shadow: 0 8px 20px rgba(15, 40, 60, .14)
-    }
-
-    .ab-list li {
-      padding: 7px 12px;
-      font-size: 13px;
-      cursor: pointer
-    }
-
-    .ab-list li:hover {
-      background: var(--brand-soft);
-      color: var(--brand-dark)
-    }
-
-    .ab-list li.none {
-      color: var(--muted);
-      cursor: default
-    }
-
-    .ab-list li.none:hover {
-      background: none;
-      color: var(--muted)
-    }
-
-    .ab-list li.act {
-      background: var(--brand-soft);
-      color: var(--brand-dark)
-    }
-
-    #app .combo-input {
-      padding-right: 30px;
-      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23667589' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center
-    }
-
-    #app .combo-input:disabled {
-      background-color: var(--field-bg);
-      cursor: default
-    }
-
-    .hc-table tbody tr.sun td {
-      background: #fff7e6;
-      color: #b54708
-    }
-
-    .hc-table tbody tr.sun:hover td {
-      background: #ffefd1
-    }
-
-    .tag.warn {
-      background: #fde9c8;
-      color: #b54708
-    }
-
-    /* ---------- Date picker ---------- */
-    .dp-trigger {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      width: 100%;
-      height: 34px;
-      padding: 0 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: #fff;
-      font: inherit;
-      font-size: 14px;
-      color: var(--ink);
-      cursor: pointer;
-      text-align: left;
-      transition: border-color .15s, box-shadow .15s
-    }
-
-    .dp-trigger:hover {
-      border-color: #b9c7d6
-    }
-
-    .dp-trigger:focus-visible,
-    .dp-trigger[aria-expanded="true"] {
-      outline: 0;
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px rgba(0, 114, 188, .15)
-    }
-
-    .dp-trigger .ph {
-      color: #8493a5
-    }
-
-    .dp-trigger svg {
-      flex-shrink: 0;
-      color: var(--brand)
-    }
-
-    .dp {
-      position: absolute;
-      left: 0;
-      top: 58px;
-      z-index: 30;
-      width: 286px;
-      padding: 12px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      box-shadow: 0 12px 28px rgba(15, 40, 60, .18)
-    }
-
-    .dp-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px
-    }
-
-    .dp-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink)
-    }
-
-    .dp-nav {
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 0;
-      border-radius: 8px;
-      background: var(--brand-soft);
-      color: var(--brand);
-      cursor: pointer;
-      transition: background .15s
-    }
-
-    .dp-nav:hover:not(:disabled) {
-      background: #d2e6f4
-    }
-
-    .dp-nav:disabled {
-      opacity: .35;
-      cursor: not-allowed
-    }
-
-    .dp-week,
-    .dp-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 2px
-    }
-
-    .dp-week span {
-      text-align: center;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--muted);
-      padding: 4px 0
-    }
-
-    .dp-week span:first-child {
-      color: #e0603a
-    }
-
-    .dp-cell {
-      height: 34px
-    }
-
-    .dp-day {
-      position: relative;
-      height: 34px;
-      border: 0;
-      border-radius: 8px;
-      background: transparent;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink);
-      cursor: pointer;
-      transition: background .12s, color .12s
-    }
-
-    .dp-day:hover {
-      background: var(--brand-soft);
-      color: var(--brand-dark)
-    }
-
-    .dp-day.sun,
-    .dp-day.sun:hover {
-      color: #b9c3ce;
-      background: repeating-linear-gradient(135deg, #f4f7fa 0 5px, #eef2f6 5px 10px);
-      text-decoration: line-through;
-      cursor: not-allowed;
-      font-weight: 400
-    }
-
-    .dp-note {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-top: 10px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      background: var(--danger-soft);
-      border: 1px solid #f6cfcb;
-      color: var(--danger);
-      font-size: 12px;
-      line-height: 1.4;
-      font-weight: 500
-    }
-
-    .dp-note svg {
-      flex-shrink: 0;
-      margin-top: 1px
-    }
-
-    .dp-day.has::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: 4px;
-      width: 4px;
-      height: 4px;
-      margin-left: -2px;
-      border-radius: 50%;
-      background: #2ec4b6
-    }
-
-    .dp-day.sel,
-    .dp-day.sel:hover {
-      background: var(--brand);
-      color: #fff;
-      font-weight: 700
-    }
-
-    .dp-day.sel.has::after {
-      background: #fff
-    }
-
-    .dp-day.taken,
-    .dp-day.taken:hover {
-      background: #eaf6f4;
-      color: #7a9a95;
-      cursor: not-allowed
-    }
-
-    .dp-foot {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--muted)
-    }
-
-    .dp-foot button {
-      border: 0;
-      background: none;
-      font: inherit;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--brand);
-      cursor: pointer;
-      padding: 2px 4px
-    }
-
-    .dp-foot button:hover {
-      text-decoration: underline
-    }
-
-    .dp-legend {
-      display: flex;
-      gap: 10px;
-      align-items: center
-    }
-
-    .dp-legend i {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 4px;
-      vertical-align: middle
-    }
-
-    /* ---------- Buttons ---------- */
-    .hc-btn {
-      border: 1px solid transparent;
-      border-radius: 6px;
-      padding: 0 14px;
-      height: 34px;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, color .15s, border-color .15s
-    }
-
-    .hc-btn:disabled {
-      opacity: .6;
-      cursor: not-allowed
-    }
-
-    .hc-btn.primary {
-      background: var(--brand);
-      color: #fff
-    }
-
-    .hc-btn.primary:hover:not(:disabled) {
-      background: var(--brand-dark)
-    }
-
-    .hc-btn.ghost {
-      background: #fff;
-      color: var(--brand);
-      border-color: var(--brand)
-    }
-
-    .hc-btn.ghost:hover:not(:disabled) {
-      background: var(--brand-soft)
-    }
-
-    .hc-btn.remove {
-      height: 26px;
-      padding: 0 10px;
-      font-size: 12px;
-      background: var(--danger-soft);
-      color: var(--danger)
-    }
-
-    .hc-btn.remove:hover:not(:disabled) {
-      background: #fbdcd9
-    }
-
-    /* ---------- Table ---------- */
-    .hc-table-wrap {
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      border: 1px solid var(--border);
-      border-radius: 6px
-    }
-
-    .hc-table-wrap::-webkit-scrollbar,
-    .ab-list::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0
-    }
-
-    .hc-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1240px
-    }
-
-    .hc-table th,
-    .hc-table td {
-      padding: 11px 14px;
-      text-align: left;
-      font-size: 13px;
-      line-height: 1.4;
-      vertical-align: middle;
-      border-bottom: 1px solid var(--border)
-    }
-
-    .hc-table th {
-      background: var(--brand-soft);
-      color: var(--brand-dark);
-      font-weight: 600;
-      white-space: nowrap
-    }
-
-    .hc-table tbody tr:last-child td {
-      border-bottom: 0
-    }
-
-    .hc-table tbody tr:hover {
-      background: #f8fbfd
-    }
-
-    .hc-table .w-sno {
-      width: 70px
-    }
-
-    .hc-table .w-act {
-      width: 110px
-    }
-
-    .hc-table .center {
-      text-align: center
-    }
-
-    .hc-table .nowrap {
-      white-space: nowrap
-    }
-
-    .muted-dash {
-      color: #9aa8b8
-    }
-
-    .tag {
-      display: inline-block;
-      margin-left: 8px;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 1px 7px;
-      border-radius: 10px;
-      background: var(--brand-soft);
-      color: var(--brand)
-    }
-
-    .hc-empty {
-      text-align: center;
-      padding: 22px 16px;
-      border: 1px dashed #c3d0dd;
-      border-radius: 6px;
-      background: #fafcfe;
-      color: var(--brand)
-    }
-
-    .hc-empty h3 {
-      margin: 6px 0 2px;
-      color: var(--ink);
-      font-size: 15px
-    }
-
-    .hc-empty p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px
-    }
-
-    /* ---------- SweetAlert2 ---------- */
-    .hc-toast.swal2-popup {
-      font-family: 'IBM Plex Sans', Arial, sans-serif !important;
-      font-size: 13px !important;
-      color: var(--ink);
-      width: auto !important;
-      max-width: 380px;
-      border-radius: 6px;
-      border-left: 4px solid var(--brand);
-      box-shadow: 0 6px 18px rgba(15, 40, 60, .16);
-      padding: 8px 12px !important
-    }
-
-    .hc-toast .swal2-title {
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      line-height: 1.4 !important;
-      margin: 0 6px !important;
-      padding: 0 !important
-    }
-
-    .hc-toast .swal2-icon {
-      width: 1.6em !important;
-      height: 1.6em !important;
-      min-width: 1.6em !important;
-      margin: 0 6px 0 0 !important;
-      font-size: 12px !important
-    }
-
-    .hc-toast .swal2-close {
-      font-size: 20px !important;
-      color: #8493a5
-    }
-
-    .hc-toast .swal2-close:hover {
-      color: var(--ink);
-      background: transparent
-    }
-
-    .hc-toast.hc-toast-success {
-      border-left-color: #198754
-    }
-
-    .hc-toast.hc-toast-error {
-      border-left-color: #b42318
-    }
-
-    .hc-toast.hc-toast-warning {
-      border-left-color: #d97706
-    }
-
-    .hc-toast.hc-toast-info {
-      border-left-color: #2ec4b6
-    }
-
-    .hc-dialog.swal2-popup {
-      font-family: 'IBM Plex Sans', Arial, sans-serif !important;
-      font-size: 12px !important;
-      padding: 14px 16px !important;
-      border-radius: 8px
-    }
-
-    .hc-dialog .swal2-title {
-      font-size: 15px !important;
-      font-weight: 600 !important;
-      color: var(--ink);
-      padding: 0 !important;
-      margin: 0 0 4px !important
-    }
-
-    .hc-dialog .swal2-html-container {
-      font-size: 12px !important;
-      margin: 4px 0 0 !important;
-      padding: 0 !important
-    }
-
-    .hc-dialog .swal2-icon {
-      width: 3.4em !important;
-      height: 3.4em !important;
-      font-size: 12px !important;
-      margin: 4px auto 8px !important
-    }
-
-    .hc-dialog .swal2-actions {
-      margin: 12px 0 0 !important
-    }
-
-    .hc-dialog .swal2-styled {
-      font-size: 12px !important;
-      padding: 6px 14px !important;
-      margin: 0 4px !important
-    }
-
-    .rm-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      margin: 2px 0 6px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      background: var(--brand-soft);
-      color: var(--ink);
-      text-align: left
-    }
-
-    .rm-info strong {
-      font-size: 13px;
-      font-weight: 600
-    }
-
-    .rm-info span {
-      font-size: 12px;
-      color: var(--muted)
-    }
-
-    .hc-dialog .rm-label {
-      justify-content: flex-start !important;
-      margin: 8px 0 4px !important;
-      padding: 0 !important;
-      font-size: 12px !important;
-      font-weight: 600;
-      color: var(--ink)
-    }
-
-    .hc-dialog .rm-input.swal2-textarea {
-      width: 100% !important;
-      min-height: 70px;
-      height: 70px;
-      margin: 0 !important;
-      padding: 8px 10px !important;
-      font: inherit !important;
-      font-size: 13px !important;
-      color: var(--ink);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      resize: none;
-      box-shadow: none
-    }
-
-    .hc-dialog .rm-input.swal2-textarea:focus {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px rgba(0, 114, 188, .15)
-    }
-
-    .hc-dialog .rm-valid.swal2-validation-message {
-      margin: 8px 0 0 !important;
-      font-size: 12px !important;
-      background: var(--danger-soft);
-      color: var(--danger)
-    }
-
-    .hc-bounce-in {
-      animation: hc-bounce-in-right .7s both
-    }
-
-    .hc-bounce-out {
-      animation: hc-bounce-out-right .4s both
-    }
-
-    @keyframes hc-bounce-in-right {
-      0% {
-        opacity: 0;
-        transform: translate3d(120%, 0, 0)
-      }
-
-      60% {
-        opacity: 1;
-        transform: translate3d(-24px, 0, 0)
-      }
-
-      75% {
-        transform: translate3d(10px, 0, 0)
-      }
-
-      90% {
-        transform: translate3d(-5px, 0, 0)
-      }
-
-      100% {
-        transform: translate3d(0, 0, 0)
-      }
-    }
-
-    @keyframes hc-bounce-out-right {
-      20% {
-        opacity: 1;
-        transform: translate3d(-20px, 0, 0)
-      }
-
-      100% {
-        opacity: 0;
-        transform: translate3d(120%, 0, 0)
-      }
-    }
-
-    /* ---------- Responsive ---------- */
-    @media (max-width:1100px) {
-
-      .hc-grid,
-      .hc-grid.four,
-      .hc-grid.row2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr))
-      }
-    }
-
+      .lg-right { display: none }
+      .lg-bg { clip-path: none; background: linear-gradient(160deg, #e6f8f5, #84e0d2) }
+      .lg-card { margin: 0 auto }
+    }
+    @media (max-width:480px) { .lg-card { padding: 28px 20px } .lg-card h1 { font-size: 24px } }
+
+    /* ===== HEADER ===== */
+    .hc-header { position: sticky; top: 0; z-index: 100; background: var(--brand); color: #fff; padding: 12px 0; box-shadow: 0 2px 10px rgba(15, 40, 60, .18) }
+    .hc-header-inner { max-width: 1680px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap }
+    .hc-header-left { display: flex; align-items: center; gap: 12px; min-width: 0 }
+    .hc-header-left h1 { margin: 0; font-size: 22px; font-weight: 600; line-height: 1.2; color: #fff }
+    .hc-header-left p { margin: 2px 0 0; font-size: 13px; color: rgba(255, 255, 255, .92) }
+    .hc-logo { flex-shrink: 0; width: 38px; height: 38px; border-radius: 8px; background: rgba(255, 255, 255, .2); color: #fff; display: flex; align-items: center; justify-content: center }
+    .hc-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap }
+    .hc-user { display: flex; align-items: center; gap: 10px; color: #fff; margin-right: 4px }
+    .hc-avatar { width: 36px; height: 36px; border-radius: 50%; background: #fff; color: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; letter-spacing: .3px }
+    .hc-user-txt { display: flex; flex-direction: column; line-height: 1.25 }
+    .hc-user-txt strong { font-size: 14px; font-weight: 600 }
+    .hc-user-txt small { font-size: 12px; color: rgba(255, 255, 255, .85) }
+    .hc-pill { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--brand); font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px }
+    .hc-pill strong { font-weight: 700; font-size: 14px }
+    .hc-btn.logout { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .7) }
+    .hc-btn.logout:hover { background: rgba(255, 255, 255, .15) }
+
+    /* ===== LAYOUT ===== */
+    .hc-container { max-width: 1680px; margin: 0 auto; padding: 14px 16px 24px }
+    .hc-card { background: #fff; border: 1px solid var(--border); border-top: 4px solid var(--brand); border-radius: 6px; padding: 12px 16px 14px; margin-bottom: 14px }
+    .hc-card h2 { margin: 0 0 2px; font-size: 17px; font-weight: 600; color: var(--brand); display: flex; align-items: center; gap: 10px }
+    .hc-sub { margin: 0 0 10px; font-size: 13px; color: var(--muted); line-height: 1.5 }
+    .count { font-size: 12px; font-weight: 600; background: var(--brand-soft); color: var(--brand); padding: 1px 8px; border-radius: 12px }
+
+    .hc-stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 12px }
+    .hc-stat { flex: 1 1 140px; padding: 8px 12px; border-radius: 8px; background: var(--brand-soft); color: var(--brand-dark) }
+    .hc-stat span { display: block; font-size: 12px; color: var(--muted) }
+    .hc-stat strong { font-size: 20px; font-weight: 700 }
+
+    /* ===== FORM ===== */
+    .hc-grid { display: grid; grid-template-columns: 1fr .8fr 1.5fr 1fr 1.6fr; gap: 10px 14px }
+    .hc-field { min-width: 0; position: relative }
+    .hc-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px }
+    .req { color: #d32f2f }
+    .err { display: block; margin-top: 2px; font-size: 12px; color: #d32f2f }
+
+    #app input, #app select {
+      display: block; width: 100%; height: 34px; margin: 0; padding: 0 10px; border: 1px solid var(--border); border-radius: 6px;
+      font: inherit; font-size: 14px; color: var(--ink); background: #fff; transition: border-color .15s, box-shadow .15s
+    }
+    #app input::placeholder { color: #8493a5 }
+    #app input:focus, #app select:focus { outline: 0; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(0, 114, 188, .15) }
+    #app input[readonly] { background: var(--field-bg); color: var(--muted); cursor: default }
+    #app select:disabled { background: var(--field-bg); cursor: wait }
+
+    .hc-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; justify-content: flex-end }
+
+    /* ===== DATE PICKER ===== */
+    .dp-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; text-align: left; transition: border-color .15s, box-shadow .15s }
+    .dp-trigger:hover { border-color: #b9c7d6 }
+    .dp-trigger:focus-visible, .dp-trigger[aria-expanded="true"] { outline: 0; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(0, 114, 188, .15) }
+    .dp-trigger .ph { color: #8493a5 }
+    .dp-trigger svg { flex-shrink: 0; color: var(--brand) }
+    .dp { position: absolute; left: 0; top: 58px; z-index: 30; width: 286px; padding: 12px; background: #fff; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 12px 28px rgba(15, 40, 60, .18) }
+    .dp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px }
+    .dp-title { font-size: 14px; font-weight: 600; color: var(--ink) }
+    .dp-nav { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: var(--brand-soft); color: var(--brand); cursor: pointer; transition: background .15s }
+    .dp-nav:hover:not(:disabled) { background: #d2e6f4 }
+    .dp-nav:disabled { opacity: .35; cursor: not-allowed }
+    .dp-week, .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px }
+    .dp-week span { text-align: center; font-size: 11px; font-weight: 600; color: var(--muted); padding: 4px 0 }
+    .dp-week span:first-child { color: #e0603a }
+    .dp-cell { height: 34px }
+    .dp-day { position: relative; height: 34px; border: 0; border-radius: 8px; background: transparent; font: inherit; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; transition: background .12s, color .12s }
+    .dp-day:hover { background: var(--brand-soft); color: var(--brand-dark) }
+    .dp-day.sun, .dp-day.sun:hover { color: #b9c3ce; background: repeating-linear-gradient(135deg, #f4f7fa 0 5px, #eef2f6 5px 10px); text-decoration: line-through; cursor: not-allowed; font-weight: 400 }
+    .dp-note { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: var(--danger-soft); border: 1px solid #f6cfcb; color: var(--danger); font-size: 12px; line-height: 1.4; font-weight: 500 }
+    .dp-note svg { flex-shrink: 0; margin-top: 1px }
+    .dp-day.has::after { content: ""; position: absolute; left: 50%; bottom: 4px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: #2ec4b6 }
+    .dp-day.sel, .dp-day.sel:hover { background: var(--brand); color: #fff; font-weight: 700 }
+    .dp-day.sel.has::after { background: #fff }
+    .dp-day.taken, .dp-day.taken:hover { background: #eaf6f4; color: #7a9a95; cursor: not-allowed }
+    .dp-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted) }
+    .dp-foot button { border: 0; background: none; font: inherit; font-size: 12px; font-weight: 600; color: var(--brand); cursor: pointer; padding: 2px 4px }
+    .dp-foot button:hover { text-decoration: underline }
+    .dp-legend { display: flex; gap: 10px; align-items: center }
+    .dp-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle }
+
+    /* ===== BUTTONS ===== */
+    .hc-btn { border: 1px solid transparent; border-radius: 6px; padding: 0 14px; height: 34px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s, border-color .15s }
+    .hc-btn:disabled { opacity: .6; cursor: not-allowed }
+    .hc-btn.primary { background: var(--brand); color: #fff }
+    .hc-btn.primary:hover:not(:disabled) { background: var(--brand-dark) }
+    .hc-btn.ghost { background: #fff; color: var(--brand); border-color: var(--brand) }
+    .hc-btn.ghost:hover:not(:disabled) { background: var(--brand-soft) }
+    .hc-btn.remove { height: 26px; padding: 0 10px; font-size: 12px; background: var(--danger-soft); color: var(--danger) }
+    .hc-btn.remove:hover:not(:disabled) { background: #fbdcd9 }
+
+    /* ===== TABLE ===== */
+    .hc-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px }
+    .hc-table { width: 100%; border-collapse: collapse; min-width: 900px }
+    .hc-table th, .hc-table td { padding: 11px 14px; text-align: left; font-size: 13px; line-height: 1.4; vertical-align: middle; border-bottom: 1px solid var(--border) }
+    .hc-table th { background: var(--brand-soft); color: var(--brand-dark); font-weight: 600; white-space: nowrap }
+    .hc-table tbody tr:last-child td { border-bottom: 0 }
+    .hc-table tbody tr:hover { background: #f8fbfd }
+    .hc-table tbody tr.sun td { background: #fff7e6; color: #b54708 }
+    .hc-table tbody tr.sun:hover td { background: #ffefd1 }
+    .hc-table .w-sno { width: 70px }
+    .hc-table .w-act { width: 110px }
+    .hc-table .center { text-align: center }
+    .hc-table .nowrap { white-space: nowrap }
+    .muted-dash { color: #9aa8b8 }
+    .tag { display: inline-block; margin-left: 8px; font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 10px; background: var(--brand-soft); color: var(--brand) }
+    .tag.warn { background: #fde9c8; color: #b54708 }
+    .tag.added { background: #dcf5f1; color: #12766b }
+    .hc-empty { text-align: center; padding: 22px 16px; border: 1px dashed #c3d0dd; border-radius: 6px; background: #fafcfe; color: var(--brand) }
+    .hc-empty h3 { margin: 6px 0 2px; color: var(--ink); font-size: 15px }
+    .hc-empty p { margin: 0; color: var(--muted); font-size: 13px }
+
+    /* ===== SWEETALERT2 ===== */
+    .hc-toast.swal2-popup { font-family: 'IBM Plex Sans', Arial, sans-serif !important; font-size: 13px !important; color: var(--ink); width: auto !important; max-width: 380px; border-radius: 6px; border-left: 4px solid var(--brand); box-shadow: 0 6px 18px rgba(15, 40, 60, .16); padding: 8px 12px !important }
+    .hc-toast .swal2-title { font-size: 13px !important; font-weight: 500 !important; line-height: 1.4 !important; margin: 0 6px !important; padding: 0 !important }
+    .hc-toast .swal2-icon { width: 1.6em !important; height: 1.6em !important; min-width: 1.6em !important; margin: 0 6px 0 0 !important; font-size: 12px !important }
+    .hc-toast .swal2-close { font-size: 20px !important; color: #8493a5 }
+    .hc-toast .swal2-close:hover { color: var(--ink); background: transparent }
+    .hc-toast.hc-toast-success { border-left-color: #198754 }
+    .hc-toast.hc-toast-error { border-left-color: #b42318 }
+    .hc-toast.hc-toast-warning { border-left-color: #d97706 }
+    .hc-toast.hc-toast-info { border-left-color: #2ec4b6 }
+    .hc-dialog.swal2-popup { font-family: 'IBM Plex Sans', Arial, sans-serif !important; font-size: 12px !important; padding: 14px 16px !important; border-radius: 8px }
+    .hc-dialog .swal2-title { font-size: 15px !important; font-weight: 600 !important; color: var(--ink); padding: 0 !important; margin: 0 0 4px !important }
+    .hc-dialog .swal2-html-container { font-size: 12px !important; margin: 4px 0 0 !important; padding: 0 !important }
+    .hc-dialog .swal2-icon { width: 3.4em !important; height: 3.4em !important; font-size: 12px !important; margin: 4px auto 8px !important }
+    .hc-dialog .swal2-actions { margin: 12px 0 0 !important }
+    .hc-dialog .swal2-styled { font-size: 12px !important; padding: 6px 14px !important; margin: 0 4px !important }
+    .rm-info { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 6px; padding: 8px 12px; border-radius: 8px; background: var(--brand-soft); color: var(--ink); text-align: left }
+    .rm-info strong { font-size: 13px; font-weight: 600 }
+    .rm-info span { font-size: 12px; color: var(--muted) }
+    .hc-dialog .rm-label { justify-content: flex-start !important; margin: 8px 0 4px !important; padding: 0 !important; font-size: 12px !important; font-weight: 600; color: var(--ink) }
+    .hc-dialog .rm-input.swal2-textarea { width: 100% !important; min-height: 70px; height: 70px; margin: 0 !important; padding: 8px 10px !important; font: inherit !important; font-size: 13px !important; color: var(--ink); border: 1px solid var(--border); border-radius: 6px; resize: none; box-shadow: none }
+    .hc-dialog .rm-input.swal2-textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(0, 114, 188, .15) }
+    .hc-dialog .rm-valid.swal2-validation-message { margin: 8px 0 0 !important; font-size: 12px !important; background: var(--danger-soft); color: var(--danger) }
+    .hc-bounce-in { animation: hc-bounce-in-right .7s both }
+    .hc-bounce-out { animation: hc-bounce-out-right .4s both }
+    @keyframes hc-bounce-in-right { 0% { opacity: 0; transform: translate3d(120%, 0, 0) } 60% { opacity: 1; transform: translate3d(-24px, 0, 0) } 75% { transform: translate3d(10px, 0, 0) } 90% { transform: translate3d(-5px, 0, 0) } 100% { transform: translate3d(0, 0, 0) } }
+    @keyframes hc-bounce-out-right { 20% { opacity: 1; transform: translate3d(-20px, 0, 0) } 100% { opacity: 0; transform: translate3d(120%, 0, 0) } }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width:1100px) { .hc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
     @media (max-width:650px) {
-      .hc-header-left h1 {
-        font-size: 19px
-      }
-
-      .hc-header-left p {
-        font-size: 12px
-      }
-
-      .hc-container {
-        padding: 10px 10px 20px
-      }
-
-      .hc-card {
-        padding: 10px 12px
-      }
-
-      .hc-grid,
-      .hc-grid.four,
-      .hc-grid.row2 {
-        grid-template-columns: 1fr
-      }
-
-      .hc-user-txt small {
-        display: none
-      }
+      .hc-header-left h1 { font-size: 19px }
+      .hc-header-left p { font-size: 12px }
+      .hc-container { padding: 10px 10px 20px }
+      .hc-card { padding: 10px 12px }
+      .hc-grid { grid-template-columns: 1fr }
+      .hc-user-txt small { display: none }
     }
   </style>
 </head>
 
 <body class="is-login">
 
-  <!-- ================= LOGIN (shown until authenticated) ================= -->
+  <!-- ================= LOGIN ================= -->
   <main class="lg-page" id="loginView" hidden>
     <div class="lg-bg"></div>
 
     <section class="lg-card" aria-labelledby="lgTitle">
       <h1 id="lgTitle">Log in to Your Account</h1>
-      <p class="lg-sub">Sign in to add and review the 2027 holiday list</p>
+      <p class="lg-sub">Sign in to add and review the holiday list</p>
 
       <form id="loginForm" novalidate autocomplete="off">
         <div class="lg-alert" id="lgAlert" role="alert" hidden></div>
 
         <div class="lg-field">
           <label for="lgEmp">Employee ID <span class="req">*</span></label>
-          <input id="lgEmp" class="lg-input" type="text" inputmode="numeric" autocomplete="username"
-            placeholder="Enter employee ID">
+          <input id="lgEmp" class="lg-input" type="text" inputmode="numeric" autocomplete="username" placeholder="Enter employee ID">
           <small class="lg-error" id="lgEmpErr" hidden>Employee ID is required.</small>
         </div>
 
         <div class="lg-field">
           <label for="lgPass">Password <span class="req">*</span></label>
           <div class="lg-pass">
-            <input id="lgPass" class="lg-input" type="password" autocomplete="current-password"
-              placeholder="Enter password">
+            <input id="lgPass" class="lg-input" type="password" autocomplete="current-password" placeholder="Enter password">
             <button type="button" class="lg-eye" id="lgEye" aria-label="Show password" aria-pressed="false">
-              <svg id="lgEyeIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg id="lgEyeIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
@@ -1354,151 +263,29 @@
         </div>
 
         <label class="lg-check"><input type="checkbox" id="lgRemember" checked> Remember me</label>
-
         <button type="submit" class="lg-btn" id="lgSubmit">SIGN IN</button>
-
-        <div class="lg-forgot-row">
-          <button type="button" class="lg-forgot" id="lgForgot">Forgot password?</button>
-        </div>
+        <div class="lg-forgot-row"><button type="button" class="lg-forgot" id="lgForgot">Forgot password?</button></div>
       </form>
     </section>
 
-    <!-- holiday content + illustration on the teal panel -->
     <aside class="lg-right">
       <div class="lg-info">
-        <h2>2027 Holiday Collection</h2>
-        <p>Add and review public holidays and other holidays for your location, all in one place. Sign in with your
-          Employee ID to get started.</p>
+        <h2>Holiday Collection</h2>
+        <p>Add and review public holidays and other holidays for your location, all in one place. Sign in with your Employee ID to get started.</p>
       </div>
-      <svg class="lg-art" viewBox="10 20 620 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true">
-        <path
-          d="M110 170C130 80 290 40 410 80C530 120 610 210 590 290C575 365 510 380 460 400C370 430 190 370 110 320C50 280 90 220 110 170Z"
-          fill="#7fd0d6" opacity=".85" />
-        <g stroke="#ffd166" stroke-width="5" stroke-linecap="round">
-          <path d="M70 40v-14M70 104v14M38 72H24M102 72h14M47 49l-10-10M93 95l10 10M93 49l10-10M47 95l-10 10" />
-        </g>
+      <svg class="lg-art" viewBox="10 20 620 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M110 170C130 80 290 40 410 80C530 120 610 210 590 290C575 365 510 380 460 400C370 430 190 370 110 320C50 280 90 220 110 170Z" fill="#7fd0d6" opacity=".85" />
+        <g stroke="#ffd166" stroke-width="5" stroke-linecap="round"><path d="M70 40v-14M70 104v14M38 72H24M102 72h14M47 49l-10-10M93 95l10 10M93 49l10-10M47 95l-10 10" /></g>
         <circle cx="70" cy="72" r="22" fill="#ffd166" />
         <ellipse cx="310" cy="436" rx="190" ry="14" fill="#6fc4cf" opacity=".7" />
         <rect x="150" y="80" width="320" height="340" rx="26" fill="#fff" />
         <path d="M150 106a26 26 0 0 1 26-26h268a26 26 0 0 1 26 26v56H150z" fill="#12766b" />
-        <text x="310" y="136" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="36"
-          font-weight="700" fill="#fff">2027</text>
+        <text x="310" y="136" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="36" font-weight="700" fill="#fff">2027</text>
         <rect x="213" y="62" width="16" height="42" rx="8" fill="#2ec4b6" />
         <rect x="391" y="62" width="16" height="42" rx="8" fill="#2ec4b6" />
-        <text x="178" y="190" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#e0603a">S</text>
-        <text x="222" y="190" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#667589">M</text>
-        <text x="266" y="190" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#667589">T</text>
-        <text x="310" y="190" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#667589">W</text>
-        <text x="354" y="190" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#667589">T</text>
-        <text x="398" y="190" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#667589">F</text>
-        <text x="442" y="190" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#667589">S</text>
-        <rect x="161" y="204" width="34" height="32" rx="9" fill="#fde9c8" />
-        <rect x="205" y="204" width="34" height="32" rx="9" fill="#f6fafa" />
-        <rect x="249" y="204" width="34" height="32" rx="9" fill="#f6fafa" />
-        <rect x="293" y="204" width="34" height="32" rx="9" fill="#f6fafa" />
-        <rect x="337" y="204" width="34" height="32" rx="9" fill="#2ec4b6" />
-        <text x="354" y="225" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#fff">1</text>
-        <rect x="381" y="204" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="398" y="225" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">2</text>
-        <rect x="425" y="204" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="442" y="225" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">3</text>
-        <rect x="161" y="244" width="34" height="32" rx="9" fill="#fde9c8" />
-        <text x="178" y="265" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#b54708">4</text>
-        <rect x="205" y="244" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="222" y="265" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">5</text>
-        <rect x="249" y="244" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="266" y="265" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">6</text>
-        <rect x="293" y="244" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="310" y="265" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">7</text>
-        <rect x="337" y="244" width="34" height="32" rx="9" fill="#ff8a65" />
-        <text x="354" y="265" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#fff">8</text>
-        <rect x="381" y="244" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="398" y="265" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">9</text>
-        <rect x="425" y="244" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="442" y="265" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">10</text>
-        <rect x="161" y="284" width="34" height="32" rx="9" fill="#fde9c8" />
-        <text x="178" y="305" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#b54708">11</text>
-        <rect x="205" y="284" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="222" y="305" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">12</text>
-        <rect x="249" y="284" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="266" y="305" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">13</text>
-        <rect x="293" y="284" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="310" y="305" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">14</text>
-        <rect x="337" y="284" width="34" height="32" rx="9" fill="#ffd166" />
-        <text x="354" y="305" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#5a4300">15</text>
-        <rect x="381" y="284" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="398" y="305" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">16</text>
-        <rect x="425" y="284" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="442" y="305" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">17</text>
-        <rect x="161" y="324" width="34" height="32" rx="9" fill="#fde9c8" />
-        <text x="178" y="345" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#b54708">18</text>
-        <rect x="205" y="324" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="222" y="345" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">19</text>
-        <rect x="249" y="324" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="266" y="345" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">20</text>
-        <rect x="293" y="324" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="310" y="345" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">21</text>
-        <rect x="337" y="324" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="354" y="345" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">22</text>
-        <rect x="381" y="324" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="398" y="345" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">23</text>
-        <rect x="425" y="324" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="442" y="345" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">24</text>
-        <rect x="161" y="364" width="34" height="32" rx="9" fill="#fde9c8" />
-        <text x="178" y="385" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#b54708">25</text>
-        <rect x="205" y="364" width="34" height="32" rx="9" fill="#ff8a65" />
-        <text x="222" y="385" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#fff">26</text>
-        <rect x="249" y="364" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="266" y="385" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">27</text>
-        <rect x="293" y="364" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="310" y="385" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">28</text>
-        <rect x="337" y="364" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="354" y="385" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">29</text>
-        <rect x="381" y="364" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="398" y="385" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">30</text>
-        <rect x="425" y="364" width="34" height="32" rx="9" fill="#eef7f6" />
-        <text x="442" y="385" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13"
-          font-weight="600" fill="#4f6f6a">31</text>
-        <path d="M548 158C540 220 520 260 505 300M590 200C575 250 540 285 515 300M498 202C500 250 505 280 505 300"
-          fill="none" stroke="#12766b" stroke-width="2" opacity=".6" />
+        <!-- calendar grid is generated by script below -->
+        <g id="lgCal"></g>
+        <path d="M548 158C540 220 520 260 505 300M590 200C575 250 540 285 515 300M498 202C500 250 505 280 505 300" fill="none" stroke="#12766b" stroke-width="2" opacity=".6" />
         <ellipse cx="548" cy="124" rx="31" ry="38" fill="#ff8a65" />
         <ellipse cx="538" cy="110" rx="7" ry="12" fill="#fff" opacity=".35" />
         <ellipse cx="590" cy="170" rx="27" ry="33" fill="#ffd166" />
@@ -1513,8 +300,7 @@
         <rect x="52" y="388" width="94" height="62" rx="7" fill="#ff8a65" />
         <rect x="44" y="368" width="110" height="26" rx="7" fill="#ff7043" />
         <rect x="92" y="368" width="14" height="82" fill="#ffd166" />
-        <path d="M99 368c-28-8-36-36-10-36 15 0 15 23 10 36zM99 368c28-8 36-36 10-36-15 0-15 23-10 36z"
-          fill="#ffd166" />
+        <path d="M99 368c-28-8-36-36-10-36 15 0 15 23 10 36zM99 368c28-8 36-36 10-36-15 0-15 23-10 36z" fill="#ffd166" />
         <rect x="120" y="150" width="9" height="9" rx="2" fill="#ff8a65" transform="rotate(25 120 150)" />
         <rect x="500" y="380" width="9" height="9" rx="2" fill="#fff" transform="rotate(25 500 380)" />
         <rect x="470" y="48" width="9" height="9" rx="2" fill="#ffd166" transform="rotate(25 470 48)" />
@@ -1524,23 +310,21 @@
     </aside>
   </main>
 
-  <!-- ================= APP (hidden until login succeeds) ================= -->
+  <!-- ================= APP ================= -->
   <div id="app" hidden>
 
-    <!-- ================= HEADER ================= -->
     <header class="hc-header">
       <div class="hc-header-inner">
         <div class="hc-header-left">
           <span class="hc-logo" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
-              stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="4.5" width="18" height="16" rx="2.5"></rect>
               <path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path>
               <path d="M8 14h3M13 14h3M8 17h3"></path>
             </svg>
           </span>
           <div>
-            <h1><span class="yr">2027</span> Holiday Collection</h1>
+            <h1><span class="yr"></span> Holiday Collection</h1>
             <p>Public holidays and other holidays applicable to your location</p>
           </div>
         </div>
@@ -1548,7 +332,7 @@
           <div class="hc-user"><span class="hc-avatar" id="userInit" aria-hidden="true"></span>
             <div class="hc-user-txt"><strong id="userName"></strong><small id="userEmp"></small></div>
           </div>
-          <span class="hc-pill"><strong id="pillCount">0</strong> <span id="pillText">holidays added</span></span>
+          <span class="hc-pill"><strong id="pillCount">0</strong> <span id="pillText">holidays counted</span></span>
           <button type="button" class="hc-btn logout" id="btnLogout">Log out</button>
         </div>
       </div>
@@ -1556,60 +340,24 @@
 
     <div class="hc-container">
 
-      <!-- ================= YOUR DETAILS (filled from login) ================= -->
-      <section class="hc-card pinned" id="detailsCard">
-        <h2>Your details</h2>
-        <p class="hc-sub">Filled from your login. These fields are locked when the value is available.</p>
-        <div class="hc-grid four">
-          <div class="hc-field">
-            <label for="state">State <span class="req">*</span></label>
-            <input id="state" class="combo-input" type="text" autocomplete="off" placeholder="Loading states..."
-              disabled>
-            <ul class="ab-list" id="stateList" role="listbox" hidden></ul>
-            <small class="err" id="err-state" hidden>Select a state.</small>
-          </div>
-
-          <div class="hc-field">
-            <label for="division">Division <span class="req">*</span></label>
-            <input id="division" class="combo-input" type="text" autocomplete="off" placeholder="Loading divisions..."
-              disabled>
-            <ul class="ab-list" id="divisionList" role="listbox" hidden></ul>
-            <small class="err" id="err-division" hidden>Select a division.</small>
-          </div>
-
-          <div class="hc-field">
-            <label for="costCenter">Cost center <span class="req">*</span></label>
-            <input id="costCenter" class="combo-input" type="text" autocomplete="off"
-              placeholder="Select division first" disabled>
-            <ul class="ab-list" id="costCenterList" role="listbox" hidden></ul>
-            <small class="err" id="err-costCenter" hidden>Select a cost center.</small>
-          </div>
-
-          <div class="hc-field">
-            <label for="actionBy">Action by <span class="req">*</span></label>
-            <input id="actionBy" type="text" autocomplete="off" placeholder="Type 3+ letters of employee name / code">
-            <ul class="ab-list" id="abList" role="listbox" hidden></ul>
-            <small class="hint" id="abHint" hidden>Searching...</small>
-            <small class="err" id="err-actionBy" hidden>Search and select an employee.</small>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= ADD HOLIDAY ================= -->
+      <!-- ADD HOLIDAY -->
       <section class="hc-card">
         <h2>Add holiday</h2>
-        <p class="hc-sub">Pick the date – the day fills in automatically – then click Add. Sundays and dates that
-          already have a holiday are not allowed.</p>
+        <p class="hc-sub">Pick the date – the day fills in automatically – then click Add. Sundays and dates that already have a holiday are not allowed.</p>
+
+        <div class="hc-stats">
+          <div class="hc-stat"><span>Maximum holidays</span><strong id="stMax">–</strong></div>
+          <div class="hc-stat"><span>Counted holidays</span><strong id="stCounted">–</strong></div>
+          <div class="hc-stat"><span>Remaining holidays</span><strong id="stRemain">–</strong></div>
+        </div>
 
         <form id="holidayForm" novalidate>
-          <!-- row 2: holiday details -->
-          <div class="hc-grid row2">
+          <div class="hc-grid">
             <div class="hc-field">
               <label for="dateBtn">Date <span class="req">*</span></label>
               <button type="button" id="dateBtn" class="dp-trigger" aria-haspopup="dialog" aria-expanded="false">
                 <span id="dateText" class="ph">Select date</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <rect x="3" y="4.5" width="18" height="16" rx="2.5"></rect>
                   <path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path>
                 </svg>
@@ -1631,14 +379,14 @@
             </div>
 
             <div class="hc-field">
-              <label for="type">Holiday type</label>
-              <select id="type"></select>
+              <label for="type">Holiday type <span class="req">*</span></label>
+              <select id="type" disabled><option value="">Loading...</option></select>
+              <small class="err" id="err-type" hidden>Select a holiday type.</small>
             </div>
 
             <div class="hc-field">
               <label for="remarks">Remark</label>
-              <input id="remarks" type="text" maxlength="200" placeholder="Remark / notification reference (optional)"
-                autocomplete="off">
+              <input id="remarks" type="text" maxlength="200" placeholder="Remark / notification reference (optional)" autocomplete="off">
             </div>
           </div>
 
@@ -1649,78 +397,72 @@
         </form>
       </section>
 
-      <!-- ================= HOLIDAY LIST ================= -->
+      <!-- HOLIDAY LIST -->
       <section class="hc-card">
         <h2>Holiday list <span class="count" id="listCount">0</span></h2>
-        <p class="hc-sub">Proposed holidays and the holidays you have added (Republic Day and Independence Day cannot be
-          removed). Maximum 12 holidays – Sundays are shown in orange and are not counted.</p>
+        <p class="hc-sub" id="listSub">Proposed holidays and the holidays you have added. Holidays marked fixed cannot be removed. Sundays are shown in orange and are not counted.</p>
         <div id="listBody"></div>
       </section>
 
     </div>
-  </div><!-- /#app -->
+  </div>
 
   <script>
     /* =====================================================================
-       AUTH  –  real login through the iConnect API
-       POST  {iconnect base}/loginaction/login   (see CONFIG below)
-       Success : res.isRegular === false  OR  res.status === 1
-       Failure : res.status === 0  (Invalid Credentials)
-       The session is kept in localStorage ("Remember me" ticked) or
-       sessionStorage (not ticked) and expires after AUTH.sessionSeconds.
-       The holiday page is only shown while a valid session exists.
+       CONFIG
        ===================================================================== */
-    const AUTH = {
-      userKey: 'userData',        // same keys the iConnect app uses
-      flagKey: 'hcLoggedIn',
-      expiryKey: 'hcSessionExpiry',
-      rememberKey: 'hcRememberedEmp',
-      sessionSeconds: 1800        // 30 minutes (same as saveUserSession(res, 1800))
+    const CONFIG = {
+      defaultYear: 2027,                                   // used only until the API returns holidayYear
+
+      // iConnect login (unchanged)
+      loginBase: 'https://sso.heterohcl.com/heteroiconnect/',
+      loginUrl: 'loginaction/login',
+      loginFields: { user: 'userName', pass: 'password' },
+      loginExtra: { application: 'desktop' },
+
+      // Holiday collection API
+      holidayBase: 'http://192.168.213.208:8095/api/holiday-collection',
+      paths: {
+        types: '/holiday-types',            // GET
+        holidays: '/holidays'               // GET /holidays/{loginId} · POST /holidays · DELETE /holidays
+      }
     };
+
+    /* =====================================================================
+       AUTH (session helpers)
+       ===================================================================== */
+    const AUTH = { userKey: 'userData', flagKey: 'hcLoggedIn', expiryKey: 'hcSessionExpiry', rememberKey: 'hcRememberedEmp', sessionSeconds: 1800 };
 
     const store = {
       get(k) { try { return localStorage.getItem(k) ?? sessionStorage.getItem(k); } catch { return null; } },
-      set(k, v, persist) {
-        try { (persist ? localStorage : sessionStorage).setItem(k, v); (persist ? sessionStorage : localStorage).removeItem(k); } catch { }
-      },
+      set(k, v, persist) { try { (persist ? localStorage : sessionStorage).setItem(k, v); (persist ? sessionStorage : localStorage).removeItem(k); } catch { } },
       remove(k) { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch { } }
     };
+    const $ = id => document.getElementById(id);
+    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-    function decodeUser() {
-      try { return JSON.parse(decodeURIComponent(window.atob(store.get(AUTH.userKey) || ''))); }
-      catch { return null; }
-    }
-    function decodeKey(k) {
-      try { return decodeURIComponent(window.atob(store.get(k) || '')); } catch { return ''; }
-    }
-    function showUser() {
-      const u = decodeUser()?.user ?? {};
-      const name = String(u.name ?? u.firstname ?? '').replace(/\s+/g, ' ').trim()
-        .toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());          // BHUKYA RAJENDER -> Bhukya Rajender
-      const emp = currentEmp();
-      $('userName').textContent = name || ('Employee ' + emp);
-      $('userEmp').textContent = emp ? 'Emp ID: ' + emp : '';
-      $('userInit').textContent = (name || emp || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    }
+    function decodeUser() { try { return JSON.parse(decodeURIComponent(window.atob(store.get(AUTH.userKey) || ''))); } catch { return null; } }
+    function decodeKey(k) { try { return decodeURIComponent(window.atob(store.get(k) || '')); } catch { return ''; } }
     function currentEmp() {
       const u = decodeUser();
       if (u?.user?.empID) return String(u.user.empID);
       try { return JSON.parse(decodeKey('loginData')).userName || ''; } catch { return ''; }
     }
-
-    function clearSession() {
-      ['userData', 'isRegular', 'currentDate', 'loginData', AUTH.flagKey, AUTH.expiryKey].forEach(k => store.remove(k));
+    function showUser() {
+      const u = decodeUser()?.user ?? {};
+      const name = String(u.name ?? u.firstname ?? '').replace(/\s+/g, ' ').trim().toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+      const emp = currentEmp();
+      $('userName').textContent = name || ('Employee ' + emp);
+      $('userEmp').textContent = emp ? 'Emp ID: ' + emp : '';
+      $('userInit').textContent = (name || emp || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
     }
-
-    // Guard: valid only when the flag, a user record and an unexpired time are present
+    function clearSession() { ['userData', 'isRegular', 'currentDate', 'loginData', AUTH.flagKey, AUTH.expiryKey].forEach(k => store.remove(k)); }
     function isAuthenticated() {
       if (store.get(AUTH.flagKey) !== 'true') return false;
       const exp = Number(store.get(AUTH.expiryKey) || 0);
       if (!exp || Date.now() > exp) { clearSession(); return false; }
       return !!decodeUser();
     }
-
-    // Same storage keys as the Angular login component (password is NOT stored)
     function saveSession(res, userName, remember) {
       const enc = v => window.btoa(encodeURIComponent(v));
       store.set(AUTH.userKey, enc(JSON.stringify(res)), remember);
@@ -1729,18 +471,12 @@
       store.set('loginData', enc(JSON.stringify({ userName })), remember);
       store.set(AUTH.flagKey, 'true', remember);
       store.set(AUTH.expiryKey, String(Date.now() + AUTH.sessionSeconds * 1000), remember);
-      try {
-        if (remember) localStorage.setItem(AUTH.rememberKey, userName); else localStorage.removeItem(AUTH.rememberKey);
-      } catch { }
+      try { if (remember) localStorage.setItem(AUTH.rememberKey, userName); else localStorage.removeItem(AUTH.rememberKey); } catch { }
     }
-
-    function logout() {
-      clearSession();
-      location.reload();            // back to the login page
-    }
+    function logout() { clearSession(); location.reload(); }
 
     /* =====================================================================
-       Toasts (SweetAlert2) – defined early, used by login and the app
+       Toasts
        ===================================================================== */
     function flash(type, text) {
       Swal.fire({
@@ -1753,17 +489,67 @@
     }
 
     /* =====================================================================
-       Login page logic
+       HTTP helpers
        ===================================================================== */
-    const $ = id => document.getElementById(id);
+    async function http(url, opts = {}) {
+      const r = await fetch(url, opts);
+      const text = await r.text();
+      let data; try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+      if (!r.ok) throw Object.assign(new Error('HTTP ' + r.status), { data, status: r.status });
+      return data;
+    }
 
+    // iConnect login
+    const loginApi = payload => http(CONFIG.loginBase + CONFIG.loginUrl, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+
+    // Holiday collection API
+    function hcApi(method, path, body) {
+      const opts = { method, headers: { Accept: 'application/json' } };
+      if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+      return http(CONFIG.holidayBase + path, opts);
+    }
+    const apiTypes = () => hcApi('GET', CONFIG.paths.types);
+    const apiList = id => hcApi('GET', `${CONFIG.paths.holidays}/${encodeURIComponent(id)}`);
+    const apiAdd = body => hcApi('POST', CONFIG.paths.holidays, body);
+    const apiRemove = body => hcApi('DELETE', CONFIG.paths.holidays, body);
+
+    // best human-readable message from an error
+    function errMsg(err, fallback) {
+      const d = err?.data;
+      if (d && typeof d === 'object') return d.message || d.error || d.detail || fallback;
+      if (typeof d === 'string' && d.trim()) return d.trim().slice(0, 160);
+      if (err?.status) return `${fallback} (server error ${err.status})`;
+      return 'Unable to reach the holiday server. Check the connection and try again.';
+    }
+
+    /* =====================================================================
+       Login page
+       ===================================================================== */
     const EYE_OPEN = '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle>';
     const EYE_SHUT = '<path d="M17.9 17.9A10.9 10.9 0 0 1 12 19C5.6 19 2 12 2 12a18.5 18.5 0 0 1 5.1-5.9M9.9 5.2A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a18.6 18.6 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2"></path><path d="M2 2l20 20"></path>';
 
-    function initLogin() {
-      const emp = $('lgEmp'), pass = $('lgPass'), alertBox = $('lgAlert');
+    // decorative calendar on the login illustration (generated, not hard-coded)
+    function drawLoginCalendar() {
+      const Y = CONFIG.defaultYear, first = new Date(Y, 0, 1).getDay(), total = 31;
+      const T = (x, y, t, fill) => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="13" font-weight="600" fill="${fill}">${t}</text>`;
+      let out = '';
+      ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach((c, i) => out += T(178 + i * 44, 190, c, i ? '#667589' : '#e0603a'));
+      for (let d = 1; d <= total; d++) {
+        const idx = first + d - 1, col = idx % 7, row = Math.floor(idx / 7);
+        const x = 161 + col * 44, y = 204 + row * 40;
+        const hl = d === 1 ? '#2ec4b6' : d === 8 ? '#ff8a65' : d === 15 ? '#ffd166' : null;
+        const bg = hl || (col === 0 ? '#fde9c8' : '#eef7f6');
+        const fg = hl ? (d === 15 ? '#5a4300' : '#fff') : (col === 0 ? '#b54708' : '#4f6f6a');
+        out += `<rect x="${x}" y="${y}" width="34" height="32" rx="9" fill="${bg}"/>` + T(x + 17, y + 21, d, fg);
+      }
+      $('lgCal').innerHTML = out;
+    }
 
-      // pre-fill remembered employee id
+    function initLogin() {
+      drawLoginCalendar();
+      const emp = $('lgEmp'), pass = $('lgPass'), alertBox = $('lgAlert');
       try { const r = localStorage.getItem(AUTH.rememberKey); if (r) emp.value = r; } catch { }
       (emp.value ? pass : emp).focus();
 
@@ -1777,21 +563,24 @@
         $('lgEye').setAttribute('aria-label', show ? 'Hide password' : 'Show password');
         pass.focus();
       });
-
       emp.addEventListener('input', () => { mark(emp, 'lgEmpErr', false); alertBox.hidden = true; });
       pass.addEventListener('input', () => { mark(pass, 'lgPassErr', false); alertBox.hidden = true; });
-
       $('lgForgot').addEventListener('click', () => flash('info', 'Please enter your iConnect password.'));
 
       const btn = $('lgSubmit');
       const setBusy = on => { btn.disabled = on; btn.textContent = on ? 'SIGNING IN...' : 'SIGN IN'; };
       const fail = msg => { alertBox.textContent = msg; alertBox.hidden = false; };
 
+      function invalidLogin() {
+        Swal.fire({ icon: 'error', title: 'Login Failed', text: 'Invalid Credentials!', showConfirmButton: false, timer: 2000 });
+        fail('Invalid Employee ID or password. Please try again.');
+        pass.value = ''; pass.focus();
+      }
+
       $('loginForm').addEventListener('submit', async e => {
         e.preventDefault();
         if (btn.disabled) return;
         const id = emp.value.trim(), pw = pass.value;
-
         mark(emp, 'lgEmpErr', !id);
         mark(pass, 'lgPassErr', !pw);
         if (!id || !pw) return;
@@ -1800,49 +589,35 @@
         setBusy(true);
         try {
           const F = CONFIG.loginFields;
-          const res = await api('login', { [F.user]: id, [F.pass]: pw, ...CONFIG.loginExtra });
-
+          const res = await loginApi({ [F.user]: id, [F.pass]: pw, ...CONFIG.loginExtra });
           if (res && (res.isRegular === false || res.status === 1)) {
             saveSession(res, id, $('lgRemember').checked);
             showApp();
             flash('success', 'Login successful. Welcome!');
-          } else if (res && res.status === 0) {
-            invalidLogin();
-          } else {
-            fail('Unable to sign in. Please try again.');
-          }
+          } else if (res && res.status === 0) invalidLogin();
+          else fail('Unable to sign in. Please try again.');
         } catch (err) {
           if (err?.data?.status === 0) invalidLogin();
-          else if (err?.status) {                                   // server answered with an HTTP error
+          else if (err?.status) {
             const detail = err.data?.message || err.data?.error || (typeof err.data === 'string' ? err.data : '');
             fail(`Login failed (server error ${err.status}).${detail ? ' ' + String(detail).slice(0, 120) : ''} Please try again.`);
             flash('error', `Login service returned error ${err.status}.`);
-          } else {                                                   // no response at all (network / CORS)
+          } else {
             fail('Unable to reach the server. Please check your connection and try again.');
             flash('error', 'Login service is not reachable.');
           }
-        } finally {
-          setBusy(false);
-        }
+        } finally { setBusy(false); }
       });
-
-      function invalidLogin() {
-        Swal.fire({ icon: 'error', title: 'Login Failed', text: 'Invalid Credentials!', showConfirmButton: false, timer: 2000 });
-        fail('Invalid Employee ID or password. Please try again.');
-        pass.value = ''; pass.focus();
-      }
     }
 
-    /* Show the holiday UI (only reached after a valid login) */
     let appStarted = false;
     function showApp() {
       $('loginView').hidden = true;
       $('app').hidden = false;
       document.body.classList.remove('is-login');
       showUser();
-      if (!appStarted) { appStarted = true; init(); }   // holiday page + API calls start only after login
+      if (!appStarted) { appStarted = true; init(); }
     }
-
     function showLogin() {
       $('app').hidden = true;
       $('loginView').hidden = false;
@@ -1851,419 +626,187 @@
     }
 
     /* =====================================================================
-       CONFIG  –  API host and endpoint paths
-       (Add / Remove holiday are STATIC for now – no save / delete API)
-       ===================================================================== */
-    const CONFIG = {
-      year: 2027,
-
-      bases: {
-        iconnect: 'https://sso.heterohcl.com/heteroiconnect/',
-        onboarding: 'https://sso.heterohcl.com/directonboarding/'
-      },
-
-      // only the lookup APIs are used (states, divisions, employee search)
-      endpoints: {
-        states: { method: 'GET', base: 'onboarding', url: 'master/states' },
-        divisions: { method: 'GET', base: 'iconnect', url: 'orgdept/business-units' },
-        costCenters: { method: 'GET', base: 'onboarding', url: 'master/costcenter/' },   // + divisionId
-        employeeSearch: { method: 'POST', base: 'onboarding', url: 'master/interviewby', body: 'form' },  // FormData { name }
-        login: { method: 'POST', base: 'iconnect', url: 'loginaction/login' }              // JSON { userName, password }
-      },
-
-      // request body of the login API: { [user]: empId, [pass]: password, ...extra }
-      loginFields: { user: 'userName', pass: 'password' },
-      loginExtra: { application: 'desktop' },
-
-      headers: () => ({})
-    };
-
-    /* =====================================================================
-       Static data
-       ===================================================================== */
-    const YEAR = CONFIG.year;
-    // locked: true  -> no Remove button (cannot be removed)
-    const PUBLIC_HOLIDAYS = [
-      { name: "New Year's Day", date: `${YEAR}-01-01` },
-      { name: 'Republic Day', date: `${YEAR}-01-26`, locked: true },
-      { name: 'May Day', date: `${YEAR}-05-01` },
-      { name: 'Independence Day', date: `${YEAR}-08-15`, locked: true },
-      { name: 'Gandhi Jayanti', date: `${YEAR}-10-02` }
-    ];
-    const MAX_HOLIDAYS = 12;   // Sundays are not counted
-    const HOLIDAY_TYPES = ['National Holiday', 'State Public Holiday', 'Local Holiday', 'Restricted / Optional', 'Company Holiday'];
-    const DEFAULT_TYPE = 'State Public Holiday';
-
-    /* =====================================================================
-       State
+       State (everything comes from the API)
        ===================================================================== */
     const S = {
-      userData: null, empCode: '', empName: '',
-      defaultStateName: '', defaultDivisionName: '', defaultDivisionId: '', defaultCostCenter: '', autoDivisionId: '',
-      states: [], divisions: [], costCenters: [], ccReq: 0,
-      holidays: [],
-      actionById: '', actionByText: '', actionByList: [], searchTimer: null
+      loginId: 0,
+      year: CONFIG.defaultYear,
+      max: 0, counted: 0, remaining: 0,
+      holidays: [],          // as returned by the API
+      types: [],             // [{id, name}]
+      busy: false
     };
-
-    const norm = v => String(v ?? '').replace(/\s+/g, ' ').trim().toUpperCase();   // compare names ignoring case / extra spaces
-    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-    /* =====================================================================
-       API layer (lookups only)
-       ===================================================================== */
-    async function api(key, payload, suffix = '') {
-      const ep = CONFIG.endpoints[key];
-      const url = CONFIG.bases[ep.base] + ep.url + suffix;
-      const opts = { method: ep.method, headers: { ...CONFIG.headers() } };
-
-      if (ep.method !== 'GET' && payload) {
-        if (ep.body === 'form') {
-          const fd = new FormData();
-          Object.entries(payload).forEach(([k, v]) => fd.append(k, v));
-          opts.body = fd;
-        } else {
-          opts.headers['Content-Type'] = 'application/json';
-          opts.body = JSON.stringify(payload);
-        }
-      }
-
-      const r = await fetch(url, opts);
-      const text = await r.text();
-      let data; try { data = text ? JSON.parse(text) : null; } catch { data = text; }
-      if (!r.ok) throw Object.assign(new Error('HTTP ' + r.status), { data, status: r.status });
-      return data;
-    }
-
-    function toList(res) {
-      if (Array.isArray(res)) return res;
-      const inner = res?.data ?? res?.result ?? res?.states ?? res?.list ?? [];
-      return Array.isArray(inner) ? inner : [];
-    }
 
     /* =====================================================================
        Helpers
        ===================================================================== */
+    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const pad2 = n => String(n).padStart(2, '0');
     const dayOf = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long' }) : '';
     const isSunday = d => !!d && new Date(d + 'T00:00:00').getDay() === 0;
-    const countable = () => S.holidays.filter(h => !isSunday(h.date)).length;
     function displayDate(d) {
       const x = new Date(d + 'T00:00:00');
-      return `${String(x.getDate()).padStart(2, '0')}-${x.toLocaleDateString('en-IN', { month: 'short' })}-${x.getFullYear()}`;
+      return `${pad2(x.getDate())}-${x.toLocaleDateString('en-IN', { month: 'short' })}-${x.getFullYear()}`;
     }
-    function readEmployee() {
-      let userData = null;
-      try {
-        // same logic as: JSON.parse(decodeURIComponent(window.atob(localStorage.getItem('userData'))))
-        const loggedUser = decodeURIComponent(window.atob(store.get(AUTH.userKey)));
-        userData = JSON.parse(loggedUser);
-      } catch (e) { console.error('Unable to read userData', e); }
+    const sorted = () => [...S.holidays].sort((a, b) => a.holidayDate.localeCompare(b.holidayDate));
 
-      S.userData = userData;
-      S.empCode = userData?.user?.empID ?? '';
-      const u = userData?.user ?? {};
-      S.empName = String(u.name ?? u.firstname ?? '').trim();
-      S.defaultStateName = norm(u.state);
-      S.defaultDivisionName = norm(u.division);
-      S.defaultDivisionId = String(u.buid ?? '').trim();
-      S.defaultCostCenter = norm(u.costcenter);
-
-      console.log('userData:', userData);
-      console.log('empId:', S.empCode);
-    }
-    // "All" / "All Divisions" style entries from the API are not offered in the dropdowns
-    const isAllOption = name => /^\s*all(\s+(divisions?|states?|bu|business\s+units?))?\s*$/i.test(name);
-
-    const normalize = (list, idKeys, nameKeys) => toList(list)
-      .map(o => ({
-        id: String(idKeys.map(k => o?.[k]).find(v => v !== undefined && v !== null) ?? ''),
-        name: String(nameKeys.map(k => o?.[k]).find(v => v !== undefined && v !== null) ?? '')
-      })).filter(o => o.id && o.name && !isAllOption(o.name));
-
-    /* =====================================================================
-       Searchable dropdown (type to filter, click / Enter to select)
-       ===================================================================== */
-    function makeCombo(inputId, listId, getItems, onChange) {
-      const input = $(inputId), list = $(listId);
-      let shown = [], active = -1;
-      const combo = { id: '', input };
-      combo.lock = on => { input.readOnly = !!on; input.classList.toggle('locked', !!on); if (on) list.hidden = true; };
-
-      const render = () => {
-        const q = input.value.trim().toLowerCase();
-        shown = getItems().filter(i => !q || i.name.toLowerCase().includes(q));
-        list.innerHTML = shown.length
-          ? shown.map((i, k) => `<li role="option" data-i="${k}" class="${k === active ? 'act' : ''}">${esc(i.name)}</li>`).join('')
-          : '<li class="none">No match found</li>';
-        list.hidden = false;
-        list.querySelector('.act')?.scrollIntoView({ block: 'nearest' });
-      };
-      const pick = item => {
-        input.value = item.name; combo.id = item.id; list.hidden = true; active = -1; onChange(item);
-      };
-
-      combo.set = item => { if (item) { input.value = item.name; combo.id = item.id; } };
-      combo.clear = () => { input.value = ''; combo.id = ''; list.hidden = true; active = -1; };
-
-      input.addEventListener('focus', () => { if (input.readOnly) return; active = -1; input.select(); render(); });
-      input.addEventListener('click', () => { if (!input.readOnly && list.hidden) render(); });
-      input.addEventListener('input', () => { if (input.readOnly) return; combo.id = ''; active = -1; render(); onChange(null); });
-      input.addEventListener('keydown', e => {
-        if (input.readOnly) return;
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          if (list.hidden) render();
-          if (!shown.length) return;
-          active = e.key === 'ArrowDown' ? (active + 1) % shown.length : (active - 1 + shown.length) % shown.length;
-          render();
-        } else if (e.key === 'Enter' && !list.hidden && active >= 0) {
-          e.preventDefault(); pick(shown[active]);
-        } else if (e.key === 'Escape') { list.hidden = true; }
-      });
-      input.addEventListener('blur', () => { list.hidden = true; if (!combo.id) input.value = ''; });
-      list.addEventListener('mousedown', e => {
-        const li = e.target.closest('li[data-i]');
-        if (li) { e.preventDefault(); pick(shown[+li.dataset.i]); }
-      });
-      return combo;
-    }
-
-    let stateCombo, divisionCombo, costCombo;
-
-    /* =====================================================================
-       Auto-patch from the logged-in user (userData.user)
-       state / division / cost center / action by are filled when the user's
-       value exists in the master list – otherwise the field is left open.
-       ===================================================================== */
-    function patchState() {
-      const it = S.defaultStateName && S.states.find(s => norm(s.name) === S.defaultStateName);
-      console.log('auto-patch state:', S.defaultStateName || '-', it ? '-> patched' : '-> not found, left open');
-      if (it) { stateCombo.set(it); $('err-state').hidden = true; }
-      stateCombo.lock(!!it);
-    }
-
-    function patchDivision() {
-      const it = (S.defaultDivisionName && S.divisions.find(d => norm(d.name) === S.defaultDivisionName)) ||
-        (S.defaultDivisionId && S.divisions.find(d => d.id === S.defaultDivisionId));
-      console.log('auto-patch division:', S.defaultDivisionName || '-', it ? '-> patched' : '-> not found, left open');
-      S.autoDivisionId = it ? it.id : '';
-      divisionCombo.lock(!!it);
-      if (!it) return;
-      divisionCombo.set(it); $('err-division').hidden = true;
-      onDivisionChange(it);                              // loads cost centers, then patches the cost center
-    }
-
-    function patchCostCenter() {
-      const it = S.defaultCostCenter && S.costCenters.find(c => norm(c.name) === S.defaultCostCenter);
-      console.log('auto-patch cost center:', S.defaultCostCenter || '-', it ? '-> patched' : '-> not found, left open');
-      if (it) { costCombo.set(it); $('err-costCenter').hidden = true; }
-      costCombo.lock(!!it);
-    }
-
-    function patchActionBy() {
-      $('actionBy').readOnly = !!S.empCode; $('actionBy').classList.toggle('locked', !!S.empCode);
-      if (!S.empCode) return;
-      const label = S.empName ? `${S.empName} (${S.empCode})` : S.empCode;
-      S.actionById = S.empCode; S.actionByText = label; S.actionByList = [];
-      $('actionBy').value = label; $('err-actionBy').hidden = true; showAbList(false);
-      console.log('auto-patch action by:', label);
-    }
-
-    /* =====================================================================
-       Masters
-       ===================================================================== */
-    async function loadStates() {
-      try {
-        S.states = normalize(await api('states'), ['id', 'stateId', 'stateID', 'value'], ['name', 'stateName', 'label']);
-      } catch {
-        S.states = [];
-        flash('error', 'Unable to load states. Please refresh the page.');
-      }
-      stateCombo.input.disabled = false; stateCombo.input.placeholder = 'Search / select state';
-      patchState();
-    }
-
-    async function loadDivisions() {
-      try {
-        S.divisions = normalize(await api('divisions'),
-          ['id', 'buId', 'businessUnitId', 'divisionId', 'divisionID', 'value'],
-          ['name', 'buName', 'businessUnitName', 'businessUnit', 'divisionName', 'label']);
-      } catch {
-        S.divisions = [];
-        flash('error', 'Unable to load divisions. Please refresh the page.');
-      }
-      divisionCombo.input.disabled = false; divisionCombo.input.placeholder = 'Search / select division';
-      patchDivision();
-    }
-
-    /* Cost center depends on the selected division */
-    function resetCostCenter(placeholder = 'Select division first') {
-      S.ccReq++; S.costCenters = [];
-      costCombo.lock(false); costCombo.clear();
-      costCombo.input.disabled = true; costCombo.input.placeholder = placeholder;
-      $('err-costCenter').hidden = true;
-    }
-
-    async function onDivisionChange(item) {
-      resetCostCenter(item ? 'Loading cost centers...' : 'Select division first');
-      if (!item) return;
-      const req = S.ccReq;
-      try {
-        const list = normalize(await api('costCenters', null, item.id),
-          ['id', 'costCenterId', 'value'], ['name', 'costCenterName', 'label']);
-        if (req !== S.ccReq) return;                       // division changed meanwhile
-        S.costCenters = list;
-      } catch {
-        if (req !== S.ccReq) return;
-        S.costCenters = [];
-        flash('error', 'Unable to load cost centers for this division.');
-      }
-      costCombo.input.disabled = false;
-      costCombo.input.placeholder = S.costCenters.length ? 'Search / select cost center' : 'No cost center found';
-      if (item.id === S.autoDivisionId) patchCostCenter();   // user's own division -> user's own cost center
-    }
-
-    /* =====================================================================
-       Action by – employee search
-       ===================================================================== */
-    function showAbList(show) { $('abList').hidden = !show; }
-
-    function searchActionBy(query) {
-      S.actionByText = query; S.actionById = '';
-      clearTimeout(S.searchTimer);
-      if (query.trim().length < 3) { S.actionByList = []; showAbList(false); $('abHint').hidden = true; return; }
-
-      S.searchTimer = setTimeout(async () => {
-        $('abHint').hidden = false; $('err-actionBy').hidden = true;
-        try {
-          const res = await api('employeeSearch', { name: query.trim() });
-          if (S.actionByText !== query) return;                         // stale response
-          S.actionByList = toList(res).map(e => {
-            const code = String(e?.empID ?? e?.empId ?? e?.employeeId ?? e?.code ?? e?.id ?? '');
-            const name = String(e?.name ?? e?.empName ?? e?.employeeName ?? e?.fullName ?? '');
-            return { id: code, label: code && name ? `${name} (${code})` : (name || code) };
-          }).filter(e => e.id);
-          $('abList').innerHTML = S.actionByList.length
-            ? S.actionByList.map((e, i) => `<li role="option" data-i="${i}">${esc(e.label)}</li>`).join('')
-            : '<li class="none">No employee found</li>';
-          showAbList(true);
-        } catch { S.actionByList = []; showAbList(false); }
-        $('abHint').hidden = true;
-      }, 300);
+    // Apply the {holidayYear, maxHolidays, countedHolidays, remainingHolidays, holidays[]} response
+    function applyResponse(res) {
+      if (!res || !Array.isArray(res.holidays)) throw new Error('Unexpected response from the holiday server.');
+      S.year = Number(res.holidayYear) || S.year;
+      S.max = Number(res.maxHolidays) || 0;
+      S.counted = Number(res.countedHolidays) || 0;
+      S.remaining = Number(res.remainingHolidays) || 0;
+      S.holidays = res.holidays;
+      document.querySelectorAll('.yr').forEach(e => e.textContent = S.year);
+      document.title = `${S.year} Holiday Collection`;
+      renderList();
     }
 
     /* =====================================================================
        Table
        ===================================================================== */
-    const sorted = () => [...S.holidays].sort((a, b) => a.date.localeCompare(b.date));
-
     function renderList() {
-      const n = S.holidays.length, counted = countable();
-      $('listCount').textContent = `${counted} / ${MAX_HOLIDAYS}`;
-      $('pillCount').textContent = counted;
-      $('pillText').textContent = counted === 1 ? 'holiday added' : 'holidays added';
+      $('listCount').textContent = `${S.counted} / ${S.max}`;
+      $('pillCount').textContent = S.counted;
+      $('pillText').textContent = S.counted === 1 ? 'holiday counted' : 'holidays counted';
+      $('stMax').textContent = S.max;
+      $('stCounted').textContent = S.counted;
+      $('stRemain').textContent = S.remaining;
+      $('listSub').textContent = `Proposed holidays and the holidays you have added. Holidays marked fixed cannot be removed. Maximum ${S.max} holidays – Sundays are shown in orange and are not counted.`;
 
-      if (!n) {
+      if (!S.holidays.length) {
         $('listBody').innerHTML = `<div class="hc-empty">
-      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path></svg>
-      <h3>No holidays in the list</h3><p>Use the form above to add a holiday.</p></div>`;
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path></svg>
+          <h3>No holidays in the list</h3><p>Use the form above to add a holiday.</p></div>`;
         return;
       }
 
       let sn = 0;
       const rows = sorted().map(h => {
-        const sun = isSunday(h.date); return `
-    <tr class="${sun ? 'sun' : ''}">
-      <td>${sun ? '<span class="muted-dash">—</span>' : ++sn}</td>
-      <td>${esc(h.state)}</td>
-      <td>${esc(h.division)}</td>
-      <td>${esc(h.costCenter || '—')}</td>
-      <td class="nowrap">${esc(displayDate(h.date))}</td>
-      <td>${esc(h.day)}${sun ? '<span class="tag warn">Sunday – not counted</span>' : ''}</td>
-      <td><strong>${esc(h.name)}</strong>${h.source === 'Public' ? '<span class="tag">Proposed</span>' : ''}</td>
-      <td>${esc(h.type)}</td>
-      <td>${esc(h.actionBy || '—')}</td>
-      <td>${esc(h.remarks || '—')}</td>
-      <td class="center">${h.locked
-            ? '<span class="muted-dash">—</span>'
-            : `<button type="button" class="hc-btn remove" data-uid="${esc(h.uid)}">Remove</button>`}</td>
-    </tr>`;
+        const sun = !!h.sunday || isSunday(h.holidayDate);
+        const countedRow = h.counted !== false && !sun;
+        const day = h.dayName || dayOf(h.holidayDate);
+        const srcTag = h.source === 'PROPOSED' ? '<span class="tag">Proposed</span>'
+          : h.source === 'ADDED' ? '<span class="tag added">Added</span>' : '';
+        return `
+        <tr class="${sun ? 'sun' : ''}">
+          <td>${countedRow ? ++sn : '<span class="muted-dash">—</span>'}</td>
+          <td class="nowrap">${esc(displayDate(h.holidayDate))}</td>
+          <td>${esc(day)}${sun ? '<span class="tag warn">Sunday – not counted</span>' : ''}</td>
+          <td><strong>${esc(h.holidayName)}</strong>${srcTag}${h.fixedHoliday ? '<span class="tag warn">Fixed</span>' : ''}</td>
+          <td>${esc(h.holidayType || '—')}</td>
+          <td>${esc(h.remark || '—')}</td>
+          <td class="center">${h.removable
+            ? `<button type="button" class="hc-btn remove" data-id="${esc(h.holidayId)}">Remove</button>`
+            : '<span class="muted-dash">—</span>'}</td>
+        </tr>`;
       }).join('');
 
       $('listBody').innerHTML = `<div class="hc-table-wrap"><table class="hc-table">
-    <thead><tr>
-      <th class="w-sno">S.No.</th><th>State</th><th>Division</th><th>Cost center</th><th>Date</th><th>Day</th>
-      <th>Event / Holiday name</th><th>Holiday type</th><th>Action by</th><th>Remark</th><th class="center w-act">Action</th>
-    </tr></thead><tbody>${rows}</tbody></table></div>`;
+        <thead><tr>
+          <th class="w-sno">S.No.</th><th>Date</th><th>Day</th><th>Event / Holiday name</th>
+          <th>Holiday type</th><th>Remark</th><th class="center w-act">Action</th>
+        </tr></thead><tbody>${rows}</tbody></table></div>`;
     }
 
     /* =====================================================================
-       Add (static – added straight to the table, no API call)
+       Holiday types (master API)
+       ===================================================================== */
+    async function loadTypes() {
+      const sel = $('type');
+      try {
+        const list = await apiTypes();
+        S.types = (Array.isArray(list) ? list : [])
+          .map(t => ({ id: t.holidayTypeId, name: t.typeName }))
+          .filter(t => t.id !== undefined && t.id !== null && t.name);
+      } catch (err) {
+        S.types = [];
+        flash('error', errMsg(err, 'Unable to load holiday types.'));
+      }
+      sel.innerHTML = S.types.length
+        ? S.types.map(t => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')
+        : '<option value="">No holiday types</option>';
+      sel.disabled = !S.types.length;
+    }
+
+    /* =====================================================================
+       Load list (GET)
+       ===================================================================== */
+    async function loadHolidays() {
+      try {
+        applyResponse(await apiList(S.loginId));
+      } catch (err) {
+        flash('error', errMsg(err, 'Unable to load holidays.'));
+        $('listBody').innerHTML = `<div class="hc-empty"><h3>Could not load holidays</h3><p>${esc(errMsg(err, 'Please refresh the page.'))}</p></div>`;
+      }
+    }
+
+    /* =====================================================================
+       Add (POST)
        ===================================================================== */
     function validate() {
-      const v = {
-        stateId: stateCombo.id, divisionId: divisionCombo.id, costCenterId: costCombo.id, date: $('date').value,
-        name: $('name').value.trim(), type: $('type').value, remarks: $('remarks').value.trim()
-      };
+      const v = { date: $('date').value, name: $('name').value.trim(), typeId: $('type').value, remark: $('remarks').value.trim() };
       let ok = true;
       const show = (id, bad, msg) => { const e = $('err-' + id); if (msg) e.textContent = msg; e.hidden = !bad; if (bad) ok = false; };
 
-      show('state', !v.stateId);
-      show('division', !v.divisionId);
-      show('costCenter', !v.costCenterId);
-      const taken = v.date && S.holidays.find(h => h.date === v.date);
-      show('date', !v.date || !v.date.startsWith(YEAR + '-') || isSunday(v.date) || !!taken,
+      const taken = v.date && S.holidays.find(h => h.holidayDate === v.date);
+      show('date', !v.date || !v.date.startsWith(S.year + '-') || isSunday(v.date) || !!taken,
         !v.date ? 'Select a date.' : isSunday(v.date) ? 'Sunday is not allowed for holidays.'
-          : taken ? `This date already has a holiday (${taken.name}). Duplicate dates are not allowed.` : `Date must be in ${YEAR}.`);
+          : taken ? `This date already has a holiday (${taken.holidayName}). Duplicate dates are not allowed.` : `Date must be in ${S.year}.`);
       show('name', !v.name);
-      show('actionBy', !S.actionById);
+      show('type', !v.typeId);
       return ok ? v : null;
     }
 
-    function addHoliday(ev) {
+    async function addHoliday(ev) {
       ev.preventDefault();
+      if (S.busy) return;
       const v = validate();
       if (!v) return;
 
-      const stateName = S.states.find(s => s.id === v.stateId)?.name || '';
-      const divisionName = S.divisions.find(d => d.id === v.divisionId)?.name || '';
-      const costCenterName = S.costCenters.find(c => c.id === v.costCenterId)?.name || '';
-
-      if (!isSunday(v.date) && countable() >= MAX_HOLIDAYS) {
-        flash('warning', `Maximum ${MAX_HOLIDAYS} holidays allowed (Sundays are not counted). Remove one to add another.`);
+      if (S.remaining <= 0) {
+        flash('warning', `Maximum ${S.max} holidays allowed (Sundays are not counted). Remove one to add another.`);
         return;
       }
 
-      S.holidays.push({
-        uid: 'h' + Date.now() + Math.random().toString(36).slice(2, 6),
-        state: stateName, division: divisionName, costCenter: costCenterName, actionBy: S.actionByText.trim(),
-        date: v.date, day: dayOf(v.date), name: v.name, type: v.type, remarks: v.remarks, source: 'Custom'
-      });
-
-      renderList();
-      flash('success', `"${v.name}" added successfully.`);
-      resetForm();
+      const btn = $('btnAdd');
+      S.busy = true; btn.disabled = true; btn.textContent = 'Adding...';
+      try {
+        const res = await apiAdd({
+          loginId: Number(S.loginId),
+          holidayDate: v.date,
+          holidayName: v.name,
+          holidayTypeId: Number(v.typeId),
+          remark: v.remark
+        });
+        applyResponse(res);
+        flash('success', `"${v.name}" added successfully.`);
+        resetForm();
+      } catch (err) {
+        flash('error', errMsg(err, 'Unable to add the holiday.'));
+      } finally {
+        S.busy = false; btn.disabled = false; btn.textContent = '+ Add holiday';
+      }
     }
 
     function resetForm() {
-      stateCombo.lock(false); stateCombo.clear();
-      divisionCombo.lock(false); divisionCombo.clear(); resetCostCenter();
       setDate(''); openDp(false);
-      $('name').value = ''; $('remarks').value = ''; $('type').value = DEFAULT_TYPE;
-      $('actionBy').readOnly = false; $('actionBy').value = ''; S.actionByText = ''; S.actionById = ''; S.actionByList = []; showAbList(false);
+      $('name').value = ''; $('remarks').value = '';
+      if (S.types.length) $('type').selectedIndex = 0;
       document.querySelectorAll('.err').forEach(e => e.hidden = true);
-      patchState(); patchDivision(); patchActionBy();      // back to the logged-in user's defaults
     }
 
     /* =====================================================================
-       Remove (static – removed from the table after confirmation, no API call)
+       Remove (DELETE)
        ===================================================================== */
-    async function removeHoliday(uid) {
-      const h = S.holidays.find(x => x.uid === uid);
-      if (!h || h.locked) return;
+    async function removeHoliday(id) {
+      const h = S.holidays.find(x => String(x.holidayId) === String(id));
+      if (!h || !h.removable) return;
 
       const r = await Swal.fire({
         title: 'Remove holiday?',
-        html: `<div class="rm-info"><strong>${esc(h.name)}</strong><span>${esc(displayDate(h.date))} &middot; ${esc(h.day)}</span></div>`,
+        html: `<div class="rm-info"><strong>${esc(h.holidayName)}</strong><span>${esc(displayDate(h.holidayDate))} &middot; ${esc(h.dayName || dayOf(h.holidayDate))}</span></div>`,
         icon: 'warning',
         input: 'textarea',
         inputLabel: 'Reason for removal *',
@@ -2272,25 +815,31 @@
         inputValidator: v => (!v || !v.trim()) ? 'Reason is required to remove a holiday.' : (v.trim().length < 3 ? 'Please enter a proper reason.' : undefined),
         showCancelButton: true, confirmButtonText: 'Yes, remove', cancelButtonText: 'Cancel',
         confirmButtonColor: '#B42318', cancelButtonColor: '#64748b', reverseButtons: true,
+        showLoaderOnConfirm: true, allowOutsideClick: () => !Swal.isLoading(),
+        preConfirm: async reason => {
+          try {
+            return await apiRemove({ loginId: Number(S.loginId), holidayId: Number(h.holidayId), reason: String(reason).trim() });
+          } catch (err) {
+            Swal.showValidationMessage(errMsg(err, 'Unable to remove the holiday.'));
+            return false;
+          }
+        },
         width: 380, customClass: { popup: 'hc-dialog', input: 'rm-input', inputLabel: 'rm-label', validationMessage: 'rm-valid' }
       });
-      if (!r.isConfirmed) return;
+      if (!r.isConfirmed || !r.value) return;
 
-      const reason = String(r.value).trim();
-      S.removed = S.removed || [];
-      S.removed.push({ ...h, removeReason: reason, removedAt: new Date().toISOString() });   // kept for the future delete API
-
-      S.holidays = S.holidays.filter(x => x.uid !== uid);
-      renderList();
-      flash('success', `"${h.name}" removed.`);
+      try {
+        applyResponse(r.value);
+        flash('success', `"${h.holidayName}" removed.`);
+      } catch {
+        await loadHolidays();                   // fall back to a fresh GET
+      }
     }
 
     /* =====================================================================
-       Date picker (custom calendar, limited to CONFIG.year)
+       Date picker (limited to the year returned by the API)
        ===================================================================== */
-    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const DP = { view: 0 };
-    const pad2 = n => String(n).padStart(2, '0');
 
     function setDate(iso) {
       $('date').value = iso || '';
@@ -2301,14 +850,14 @@
     }
 
     function renderDp() {
-      const m = DP.view, sel = $('date').value;
-      const first = new Date(YEAR, m, 1).getDay();
-      const total = new Date(YEAR, m + 1, 0).getDate();
-      const used = new Map(S.holidays.map(h => [h.date, h.name]));
+      const Y = S.year, m = DP.view, sel = $('date').value;
+      const first = new Date(Y, m, 1).getDay();
+      const total = new Date(Y, m + 1, 0).getDate();
+      const used = new Map(S.holidays.map(h => [h.holidayDate, h.holidayName]));
 
       let cells = '<span class="dp-cell"></span>'.repeat(first);
       for (let d = 1; d <= total; d++) {
-        const iso = `${YEAR}-${pad2(m + 1)}-${pad2(d)}`;
+        const iso = `${Y}-${pad2(m + 1)}-${pad2(d)}`;
         const isSun = (first + d - 1) % 7 === 0;
         const cls = ['dp-day', isSun ? 'sun' : '', iso === sel ? 'sel' : '', used.has(iso) ? 'has taken' : ''].join(' ');
         const tip = isSun ? 'Sunday – not allowed for holidays' : used.has(iso) ? `Already added: ${used.get(iso)}` : '';
@@ -2316,23 +865,23 @@
       }
 
       $('dp').innerHTML = `
-    <div class="dp-head">
-      <button type="button" class="dp-nav" data-nav="-1" aria-label="Previous month" ${m === 0 ? 'disabled' : ''}>
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <span class="dp-title">${MONTHS[m]} ${YEAR}</span>
-      <button type="button" class="dp-nav" data-nav="1" aria-label="Next month" ${m === 11 ? 'disabled' : ''}>
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-    </div>
-    <div class="dp-week"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
-    <div class="dp-grid">${cells}</div>
-    <div class="dp-note" id="dpNote" role="alert" hidden>
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
-      <span id="dpNoteTxt"></span>
-    </div>
-    <div class="dp-foot">
-      <span class="dp-legend"><span><i style="background:#cfd8e2"></i>Sunday (not allowed)</span><span><i style="background:#2ec4b6"></i>Already added</span></span>
-      <button type="button" data-clear="1">Clear</button>
-    </div>`;
+        <div class="dp-head">
+          <button type="button" class="dp-nav" data-nav="-1" aria-label="Previous month" ${m === 0 ? 'disabled' : ''}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <span class="dp-title">${MONTHS[m]} ${Y}</span>
+          <button type="button" class="dp-nav" data-nav="1" aria-label="Next month" ${m === 11 ? 'disabled' : ''}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="dp-week"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="dp-grid">${cells}</div>
+        <div class="dp-note" id="dpNote" role="alert" hidden>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+          <span id="dpNoteTxt"></span>
+        </div>
+        <div class="dp-foot">
+          <span class="dp-legend"><span><i style="background:#cfd8e2"></i>Sunday (not allowed)</span><span><i style="background:#2ec4b6"></i>Already added</span></span>
+          <button type="button" data-clear="1">Clear</button>
+        </div>`;
     }
 
     function openDp(open) {
@@ -2354,15 +903,15 @@
         if (e.target.closest('[data-clear]')) { setDate(''); openDp(false); return; }
         const day = e.target.closest('[data-d]');
         if (day) {
-          if (day.classList.contains('sun') || day.classList.contains('taken')) {         // Sundays and already-added dates cannot be picked
+          if (day.classList.contains('sun') || day.classList.contains('taken')) {
             $('dpNoteTxt').textContent = day.classList.contains('sun')
               ? 'Sunday is not allowed for holidays. Please choose another day.'
-              : `This date already has a holiday (${S.holidays.find(h => h.date === day.dataset.d)?.name}). Duplicate dates are not allowed.`;
+              : `This date already has a holiday (${S.holidays.find(h => h.holidayDate === day.dataset.d)?.holidayName}). Duplicate dates are not allowed.`;
             $('dpNote').hidden = false;
             return;
           }
           setDate(day.dataset.d);
-          $('date').dispatchEvent(new Event('input'));      // clears the date error
+          $('err-date').hidden = true;
           openDp(false);
           $('dateBtn').focus();
         }
@@ -2374,27 +923,11 @@
     }
 
     /* =====================================================================
-       Init (holiday page – runs only after a valid login)
+       Init (runs only after a valid login)
        ===================================================================== */
-    function init() {
-      readEmployee();
-      // keep the pinned card exactly below the header (header height changes when it wraps)
-      const hdr = document.querySelector('.hc-header');
-      const setHdr = () => document.documentElement.style.setProperty('--hdr-h', hdr.offsetHeight + 'px');
-      setHdr();
-      if (window.ResizeObserver) new ResizeObserver(setHdr).observe(hdr); else window.addEventListener('resize', setHdr);
-      document.querySelectorAll('.yr').forEach(e => e.textContent = YEAR);
-      document.title = `${YEAR} Holiday Collection`;
-
-      $('type').innerHTML = HOLIDAY_TYPES.map(t => `<option>${esc(t)}</option>`).join('');
-      $('type').value = DEFAULT_TYPE;
-
-      S.holidays = PUBLIC_HOLIDAYS.map(h => ({
-        uid: 'p' + h.date, state: 'All States', division: 'All Divisions', actionBy: '—',
-        date: h.date, day: dayOf(h.date), name: h.name, type: 'National Holiday',
-        remarks: 'Proposed holiday', source: 'Public', locked: !!h.locked
-      }));
-      renderList();
+    async function init() {
+      S.loginId = currentEmp();
+      document.querySelectorAll('.yr').forEach(e => e.textContent = S.year);
 
       $('btnLogout').addEventListener('click', async () => {
         const r = await Swal.fire({
@@ -2410,36 +943,17 @@
       $('holidayForm').addEventListener('submit', addHoliday);
       $('btnReset').addEventListener('click', resetForm);
       $('listBody').addEventListener('click', e => {
-        const b = e.target.closest('button[data-uid]'); if (b) removeHoliday(b.dataset.uid);
+        const b = e.target.closest('button[data-id]'); if (b) removeHoliday(b.dataset.id);
       });
+      $('name').addEventListener('input', () => { $('err-name').hidden = true; });
+      $('type').addEventListener('change', () => { $('err-type').hidden = true; });
 
-      const ab = $('actionBy');
-      ab.addEventListener('input', e => searchActionBy(e.target.value));
-      ab.addEventListener('focus', () => showAbList(S.actionByList.length > 0 || !$('abList').hidden));
-      ab.addEventListener('blur', () => showAbList(false));
-      $('abList').addEventListener('mousedown', e => {
-        const li = e.target.closest('li[data-i]'); if (!li) return;
-        const emp = S.actionByList[+li.dataset.i];
-        S.actionById = emp.id; S.actionByText = emp.label; ab.value = emp.label;
-        $('err-actionBy').hidden = true; showAbList(false);
-      });
-      ['date', 'name'].forEach(id => $(id).addEventListener('input', () => { $('err-' + id).hidden = true; }));
-
-      stateCombo = makeCombo('state', 'stateList', () => S.states, it => { if (it) $('err-state').hidden = true; });
-      costCombo = makeCombo('costCenter', 'costCenterList', () => S.costCenters, it => { if (it) $('err-costCenter').hidden = true; });
-      divisionCombo = makeCombo('division', 'divisionList', () => S.divisions, it => {
-        if (it) $('err-division').hidden = true;
-        onDivisionChange(it);
-      });
-      resetCostCenter();
-      patchActionBy();
-
-      loadStates();
-      loadDivisions();
+      if (!S.loginId) { flash('error', 'Employee ID not found in the session. Please log in again.'); return; }
+      await Promise.all([loadTypes(), loadHolidays()]);
     }
 
     /* =====================================================================
-       BOOT – the guard: login page first, holiday page only if logged in
+       BOOT
        ===================================================================== */
     if (isAuthenticated()) showApp(); else showLogin();
   </script>
