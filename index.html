@@ -36,47 +36,64 @@
 
     /* ===== LOGIN ===== */
     .lg-page {
-      --lg-teal: #2ec4b6; --lg-teal-dark: #25a99c; --lg-deep: #12766b; --lg-panel: #84e0d2; --lg-line: #bfeae4; --lg-card: #f6fcfb;
-      position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; background: #fff;
-      font-family: 'Noto Sans', 'IBM Plex Sans', Arial, sans-serif; color: var(--lg-deep)
+      --lg-brand: #0072BC; --lg-brand-dark: #005a96; --lg-ink: #0b3a5c; --lg-muted: #5f7b92;
+      --lg-line: #cfe2f1; --lg-soft: #f3f9fd; --lg-tint: #e6f1f9;
+      min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; background: #fff;
+      font-family: 'Noto Sans', 'IBM Plex Sans', Arial, sans-serif; color: var(--lg-ink)
     }
-    .lg-bg { position: absolute; inset: 0; background: var(--lg-panel); clip-path: polygon(58% 0, 100% 0, 100% 100%, 46% 100%); pointer-events: none }
-    .lg-right { position: absolute; z-index: 1; top: 0; bottom: 0; left: 61%; right: 3.5vw; display: flex; flex-direction: column; gap: 18px; padding: 6vh 0 3vh; color: #0b4f47 }
-    .lg-info h2 { margin: 0 0 8px; font-size: 32px; font-weight: 700; line-height: 1.2; color: #0b4f47 }
-    .lg-info p { margin: 0; max-width: 52ch; font-size: 15px; line-height: 1.6; color: #14625a }
-    .lg-art { flex: 1 1 0; min-height: 0; width: 100%; pointer-events: none }
+    .lg-left {
+      position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; padding: 6vh 4.5vw 3vh;
+      background: linear-gradient(160deg, #eef7fd 0%, #d6eaf7 100%); color: var(--lg-ink)
+    }
+    .lg-left::before, .lg-left::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none }
+    .lg-left::before { width: 380px; height: 380px; top: -130px; right: -110px; background: rgba(0, 114, 188, .08) }
+    .lg-left::after { width: 280px; height: 280px; bottom: -100px; left: -80px; background: rgba(0, 114, 188, .06) }
+    .lg-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; color: var(--lg-brand) }
+    .lg-brand i { width: 40px; height: 40px; border-radius: 12px; background: var(--lg-brand); color: #fff; display: flex; align-items: center; justify-content: center }
+    .lg-info { position: relative; z-index: 1 }
+    .lg-info h2 { margin: 10px 0 8px; font-size: 32px; font-weight: 700; line-height: 1.25; color: var(--lg-ink) }
+    .lg-info p { margin: 0; max-width: 50ch; font-size: 15px; line-height: 1.65; color: var(--lg-muted) }
+    .lg-art { position: relative; z-index: 1; flex: 1 1 0; min-height: 0; width: 100%; pointer-events: none }
     @media (max-height:560px) { .lg-info p { display: none } }
-    .lg-card { position: relative; z-index: 2; width: min(480px, calc(100% - 32px)); margin-left: 9vw; padding: 36px 40px 34px; background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: 28px; box-shadow: 0 8px 24px rgba(46, 196, 182, .18) }
-    .lg-card h1 { margin: 0; text-align: center; font-size: 30px; font-weight: 700; letter-spacing: .2px; color: var(--lg-deep) }
-    .lg-sub { margin: 6px 0 26px; text-align: center; font-size: 15px; color: #3d5b57 }
+
+    .lg-right { display: flex; align-items: center; justify-content: center; padding: 32px 24px; background: #fff }
+    .lg-card { width: min(420px, 100%); padding: 8px 4px }
+    .lg-card h1 { margin: 0; font-size: 28px; font-weight: 700; color: var(--lg-ink) }
+    .lg-sub { margin: 6px 0 28px; font-size: 14.5px; color: var(--lg-muted) }
     .lg-field { margin-bottom: 18px }
-    .lg-field label { display: block; margin-bottom: 8px; font-size: 15px; font-weight: 600; color: var(--lg-deep) }
-    .lg-field .req { color: #e00; font-size: 18px; margin-left: 2px }
-    .lg-input { display: block; width: 100%; height: 52px; padding: 0 18px; font: inherit; font-size: 16px; color: #1b2a3a; background: #fff; border: 1px solid var(--lg-line); border-radius: 14px; transition: border-color .15s, box-shadow .15s }
-    .lg-input::placeholder { color: #8aa5a1 }
-    .lg-input:focus { outline: 0; border-color: var(--lg-teal); box-shadow: 0 0 0 3px rgba(46, 196, 182, .22) }
+    .lg-field label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 600; color: var(--lg-ink) }
+    .lg-field .req { color: #d32f2f; margin-left: 2px }
+    .lg-input { display: block; width: 100%; height: 48px; padding: 0 16px; font: inherit; font-size: 15px; color: var(--lg-ink); background: var(--lg-soft); border: 1px solid var(--lg-line); border-radius: 10px; box-shadow: none; outline: 0; transition: border-color .15s, background .15s }
+    .lg-input::placeholder { color: #8fa6b8 }
+    .lg-input:hover { border-color: #a9cbe4 }
+    .lg-input:focus, .lg-input:focus-visible { outline: 0; box-shadow: none; background: #fff; border-color: var(--lg-brand) }
     .lg-input.bad { border-color: #d32f2f }
     .lg-pass { display: flex; align-items: stretch }
-    .lg-pass .lg-input { border-radius: 14px 0 0 14px; border-right: 0 }
-    .lg-eye { flex: 0 0 58px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #effaf8; color: var(--lg-deep); border: 1px solid var(--lg-line); border-radius: 0 14px 14px 0; transition: background .15s }
-    .lg-eye:hover { background: #dff5f1 }
-    .lg-eye:focus-visible, .lg-btn:focus-visible, .lg-forgot:focus-visible { outline: 3px solid rgba(46, 196, 182, .45); outline-offset: 2px }
+    .lg-pass .lg-input { border-radius: 10px 0 0 10px; border-right: 0 }
+    .lg-eye { flex: 0 0 52px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: var(--lg-tint); color: var(--lg-brand); border: 1px solid var(--lg-line); border-radius: 0 10px 10px 0; outline: 0; transition: background .15s, border-color .15s }
+    .lg-eye:hover { background: #d6e9f6 }
+    .lg-pass:focus-within .lg-input, .lg-pass:focus-within .lg-eye { border-color: var(--lg-brand) }
+    .lg-pass:focus-within .lg-input { background: #fff }
     .lg-error { display: block; margin-top: 6px; font-size: 13px; color: #d32f2f }
-    .lg-alert { margin: 0 0 14px; padding: 10px 14px; border-radius: 10px; background: #fdf0ef; color: #b42318; font-size: 14px; border: 1px solid #f6cfcb }
-    .lg-check { display: flex; align-items: center; gap: 10px; margin: 4px 0 14px 12px; font-size: 16px; font-weight: 600; color: var(--lg-deep); cursor: pointer; width: fit-content }
-    .lg-check input { display: inline-block; width: 19px; height: 19px; margin: 0; padding: 0; accent-color: var(--lg-deep); cursor: pointer }
-    .lg-btn { display: block; width: 100%; height: 54px; border: 0; border-radius: 12px; cursor: pointer; font: inherit; font-size: 20px; font-weight: 700; letter-spacing: .5px; color: #fff; background: var(--lg-teal); transition: background .15s }
-    .lg-btn:hover { background: var(--lg-teal-dark) }
+    .lg-alert { margin: 0 0 14px; padding: 10px 14px; border-radius: 8px; background: #fdf0ef; color: #b42318; font-size: 14px; border: 1px solid #f6cfcb }
+    .lg-check { display: flex; align-items: center; gap: 10px; margin: 2px 0 22px; font-size: 14px; font-weight: 500; color: var(--lg-ink); cursor: pointer; width: fit-content }
+    .lg-check input { display: inline-block; width: 17px; height: 17px; margin: 0; padding: 0; accent-color: var(--lg-brand); cursor: pointer }
+    .lg-btn { display: block; width: 100%; height: 50px; border: 0; border-radius: 10px; cursor: pointer; font: inherit; font-size: 15px; font-weight: 700; letter-spacing: .8px; color: #fff; background: var(--lg-brand); outline: 0; transition: background .15s }
+    .lg-btn:hover { background: var(--lg-brand-dark) }
     .lg-btn:disabled { opacity: .7; cursor: wait }
-    .lg-forgot-row { margin-top: 24px; text-align: right; padding-right: 14px }
-    .lg-forgot { background: none; border: 0; padding: 0; font: inherit; font-size: 16px; font-weight: 600; color: #1a9a8c; text-decoration: underline; cursor: pointer }
-    .lg-forgot:hover { color: var(--lg-deep) }
-    @media (max-width:1000px) {
-      .lg-right { display: none }
-      .lg-bg { clip-path: none; background: linear-gradient(160deg, #e6f8f5, #84e0d2) }
-      .lg-card { margin: 0 auto }
+    .lg-forgot-row { margin-top: 20px; text-align: center }
+    .lg-forgot { background: none; border: 0; padding: 0; font: inherit; font-size: 14px; font-weight: 600; color: var(--lg-brand); cursor: pointer; outline: 0 }
+    .lg-forgot:hover { color: var(--lg-brand-dark); text-decoration: underline }
+    .lg-right { background-color: #fff; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='330' cy='40' r='150' fill='%230072BC' opacity='.06'/%3E%3Ccircle cx='380' cy='150' r='70' fill='%230072BC' opacity='.05'/%3E%3Cg fill='%230072BC' opacity='.22'%3E%3Ccircle cx='40' cy='40' r='3'/%3E%3Ccircle cx='64' cy='40' r='3'/%3E%3Ccircle cx='88' cy='40' r='3'/%3E%3Ccircle cx='40' cy='64' r='3'/%3E%3Ccircle cx='64' cy='64' r='3'/%3E%3Ccircle cx='88' cy='64' r='3'/%3E%3Ccircle cx='40' cy='88' r='3'/%3E%3Ccircle cx='64' cy='88' r='3'/%3E%3Ccircle cx='88' cy='88' r='3'/%3E%3C/g%3E%3Cg fill='none' stroke='%230072BC' stroke-width='2' opacity='.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='236' y='70' width='64' height='58' rx='10' transform='rotate(10 268 99)'/%3E%3Cpath d='M236 90h64M254 62v14M282 62v14' transform='rotate(10 268 99)'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Ccircle cx='60' cy='270' r='160' fill='%230072BC' opacity='.06'/%3E%3Ccircle cx='10' cy='150' r='60' fill='%230072BC' opacity='.05'/%3E%3Cpath d='M0 250C70 215 130 285 210 250S340 215 400 245V300H0Z' fill='%230072BC' opacity='.07'/%3E%3Cg fill='none' stroke='%230072BC' stroke-width='2' opacity='.25' stroke-linecap='round'%3E%3Cpath d='M330 215l10 10m0-10l-10 10M300 255l8 8m0-8l-8 8'/%3E%3Ccircle cx='355' cy='262' r='6'/%3E%3C/g%3E%3C/svg%3E"); background-repeat: no-repeat, no-repeat; background-position: right top, left bottom; background-size: 46% auto, 46% auto }
+    #lgEmp { padding-left: 46px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%230072BC' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 15px center }
+    #lgPass { padding-left: 46px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%230072BC' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='10.5' width='16' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V8a4 4 0 0 1 8 0v2.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 15px center }
+        @media (max-width:900px) {
+      .lg-page { grid-template-columns: 1fr }
+      .lg-left { display: none }
+      .lg-right { min-height: 100vh; background-color: #eaf4fb; background-size: 70% auto, 70% auto }
+      .lg-card { padding: 32px 24px; background: #fff; border: 1px solid var(--lg-line); border-radius: 16px }
     }
-    @media (max-width:480px) { .lg-card { padding: 28px 20px } .lg-card h1 { font-size: 24px } }
+    @media (max-width:480px) { .lg-card h1 { font-size: 24px } }
 
     /* ===== HEADER ===== */
     .hc-header { position: sticky; top: 0; z-index: 100; background: var(--brand); color: #fff; padding: 12px 0; box-shadow: 0 2px 10px rgba(15, 40, 60, .18) }
@@ -233,81 +250,92 @@
 
   <!-- ================= LOGIN ================= -->
   <main class="lg-page" id="loginView" hidden>
-    <div class="lg-bg"></div>
 
-    <section class="lg-card" aria-labelledby="lgTitle">
-      <h1 id="lgTitle">Log in to Your Account</h1>
-      <p class="lg-sub">Sign in to add and review the holiday list</p>
-
-      <form id="loginForm" novalidate autocomplete="off">
-        <div class="lg-alert" id="lgAlert" role="alert" hidden></div>
-
-        <div class="lg-field">
-          <label for="lgEmp">Employee ID <span class="req">*</span></label>
-          <input id="lgEmp" class="lg-input" type="text" inputmode="numeric" autocomplete="username" placeholder="Enter employee ID">
-          <small class="lg-error" id="lgEmpErr" hidden>Employee ID is required.</small>
-        </div>
-
-        <div class="lg-field">
-          <label for="lgPass">Password <span class="req">*</span></label>
-          <div class="lg-pass">
-            <input id="lgPass" class="lg-input" type="password" autocomplete="current-password" placeholder="Enter password">
-            <button type="button" class="lg-eye" id="lgEye" aria-label="Show password" aria-pressed="false">
-              <svg id="lgEyeIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
-          <small class="lg-error" id="lgPassErr" hidden>Password is required.</small>
-        </div>
-
-        <label class="lg-check"><input type="checkbox" id="lgRemember" checked> Remember me</label>
-        <button type="submit" class="lg-btn" id="lgSubmit">SIGN IN</button>
-        <div class="lg-forgot-row"><button type="button" class="lg-forgot" id="lgForgot">Forgot password?</button></div>
-      </form>
-    </section>
-
-    <aside class="lg-right">
+    <aside class="lg-left">
+      <div class="lg-brand">
+        <i aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4.5" width="18" height="16" rx="2.5"></rect>
+            <path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path>
+            <path d="M8 14h3M13 14h3M8 17h3"></path>
+          </svg>
+        </i>
+        Holiday Collection
+      </div>
       <div class="lg-info">
-        <h2>Holiday Collection</h2>
+        <h2>Plan your year,<br>one holiday at a time.</h2>
         <p>Add and review public holidays and other holidays for your location, all in one place. Sign in with your Employee ID to get started.</p>
       </div>
       <svg class="lg-art" viewBox="10 20 620 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M110 170C130 80 290 40 410 80C530 120 610 210 590 290C575 365 510 380 460 400C370 430 190 370 110 320C50 280 90 220 110 170Z" fill="#7fd0d6" opacity=".85" />
-        <g stroke="#ffd166" stroke-width="5" stroke-linecap="round"><path d="M70 40v-14M70 104v14M38 72H24M102 72h14M47 49l-10-10M93 95l10 10M93 49l10-10M47 95l-10 10" /></g>
-        <circle cx="70" cy="72" r="22" fill="#ffd166" />
-        <ellipse cx="310" cy="436" rx="190" ry="14" fill="#6fc4cf" opacity=".7" />
-        <rect x="150" y="80" width="320" height="340" rx="26" fill="#fff" />
-        <path d="M150 106a26 26 0 0 1 26-26h268a26 26 0 0 1 26 26v56H150z" fill="#12766b" />
+        <path d="M110 170C130 80 290 40 410 80C530 120 610 210 590 290C575 365 510 380 460 400C370 430 190 370 110 320C50 280 90 220 110 170Z" fill="#0072BC" opacity=".08" />
+        <g stroke="#fbbf24" stroke-width="5" stroke-linecap="round"><path d="M70 40v-14M70 104v14M38 72H24M102 72h14M47 49l-10-10M93 95l10 10M93 49l10-10M47 95l-10 10" /></g>
+        <circle cx="70" cy="72" r="22" fill="#fbbf24" />
+        <ellipse cx="310" cy="436" rx="190" ry="14" fill="#0072BC" opacity=".15" />
+        <rect x="150" y="80" width="320" height="340" rx="26" fill="#fff" stroke="#bcd9ee" stroke-width="2" />
+        <path d="M150 106a26 26 0 0 1 26-26h268a26 26 0 0 1 26 26v56H150z" fill="#0072BC" />
         <text x="310" y="136" text-anchor="middle" font-family="Noto Sans,Arial,sans-serif" font-size="36" font-weight="700" fill="#fff">2027</text>
-        <rect x="213" y="62" width="16" height="42" rx="8" fill="#2ec4b6" />
-        <rect x="391" y="62" width="16" height="42" rx="8" fill="#2ec4b6" />
+        <rect x="213" y="62" width="16" height="42" rx="8" fill="#7fb8e0" />
+        <rect x="391" y="62" width="16" height="42" rx="8" fill="#7fb8e0" />
         <!-- calendar grid is generated by script below -->
         <g id="lgCal"></g>
-        <path d="M548 158C540 220 520 260 505 300M590 200C575 250 540 285 515 300M498 202C500 250 505 280 505 300" fill="none" stroke="#12766b" stroke-width="2" opacity=".6" />
-        <ellipse cx="548" cy="124" rx="31" ry="38" fill="#ff8a65" />
+        <path d="M548 158C540 220 520 260 505 300M590 200C575 250 540 285 515 300M498 202C500 250 505 280 505 300" fill="none" stroke="#0072BC" stroke-width="2" opacity=".45" />
+        <ellipse cx="548" cy="124" rx="31" ry="38" fill="#5aa9db" />
         <ellipse cx="538" cy="110" rx="7" ry="12" fill="#fff" opacity=".35" />
-        <ellipse cx="590" cy="170" rx="27" ry="33" fill="#ffd166" />
+        <ellipse cx="590" cy="170" rx="27" ry="33" fill="#fbbf24" />
         <ellipse cx="581" cy="158" rx="6" ry="10" fill="#fff" opacity=".4" />
-        <ellipse cx="498" cy="172" rx="25" ry="31" fill="#12766b" />
+        <ellipse cx="498" cy="172" rx="25" ry="31" fill="#0072BC" />
         <ellipse cx="489" cy="160" rx="6" ry="10" fill="#fff" opacity=".3" />
-        <rect x="528" y="330" width="5" height="106" rx="2" fill="#12766b" />
+        <rect x="528" y="330" width="5" height="106" rx="2" fill="#0072BC" opacity=".85" />
         <rect x="533" y="330" width="76" height="14" fill="#ff9933" />
         <rect x="533" y="344" width="76" height="14" fill="#fff" />
         <rect x="533" y="358" width="76" height="14" fill="#138808" />
         <circle cx="571" cy="351" r="5" fill="none" stroke="#000080" stroke-width="1.5" />
-        <rect x="52" y="388" width="94" height="62" rx="7" fill="#ff8a65" />
-        <rect x="44" y="368" width="110" height="26" rx="7" fill="#ff7043" />
-        <rect x="92" y="368" width="14" height="82" fill="#ffd166" />
-        <path d="M99 368c-28-8-36-36-10-36 15 0 15 23 10 36zM99 368c28-8 36-36 10-36-15 0-15 23-10 36z" fill="#ffd166" />
-        <rect x="120" y="150" width="9" height="9" rx="2" fill="#ff8a65" transform="rotate(25 120 150)" />
-        <rect x="500" y="380" width="9" height="9" rx="2" fill="#fff" transform="rotate(25 500 380)" />
-        <rect x="470" y="48" width="9" height="9" rx="2" fill="#ffd166" transform="rotate(25 470 48)" />
-        <rect x="30" y="240" width="9" height="9" rx="2" fill="#fff" transform="rotate(25 30 240)" />
-        <rect x="612" y="300" width="9" height="9" rx="2" fill="#ff8a65" transform="rotate(25 612 300)" />
+        <rect x="52" y="388" width="94" height="62" rx="7" fill="#5aa9db" />
+        <rect x="44" y="368" width="110" height="26" rx="7" fill="#3d94d0" />
+        <rect x="92" y="368" width="14" height="82" fill="#fbbf24" />
+        <path d="M99 368c-28-8-36-36-10-36 15 0 15 23 10 36zM99 368c28-8 36-36 10-36-15 0-15 23-10 36z" fill="#fbbf24" />
+        <rect x="120" y="150" width="9" height="9" rx="2" fill="#5aa9db" transform="rotate(25 120 150)" />
+        <rect x="500" y="380" width="9" height="9" rx="2" fill="#9cc9ea" transform="rotate(25 500 380)" />
+        <rect x="470" y="48" width="9" height="9" rx="2" fill="#fbbf24" transform="rotate(25 470 48)" />
+        <rect x="30" y="240" width="9" height="9" rx="2" fill="#9cc9ea" transform="rotate(25 30 240)" />
+        <rect x="612" y="300" width="9" height="9" rx="2" fill="#5aa9db" transform="rotate(25 612 300)" />
       </svg>
     </aside>
+
+    <section class="lg-right">
+      <div class="lg-card" aria-labelledby="lgTitle">
+        <h1 id="lgTitle">Welcome back</h1>
+        <p class="lg-sub">Sign in to add and review the holiday list</p>
+
+        <form id="loginForm" novalidate autocomplete="off">
+          <div class="lg-alert" id="lgAlert" role="alert" hidden></div>
+
+          <div class="lg-field">
+            <label for="lgEmp">Employee ID <span class="req">*</span></label>
+            <input id="lgEmp" class="lg-input" type="text" inputmode="numeric" autocomplete="username" placeholder="Enter employee ID">
+            <small class="lg-error" id="lgEmpErr" hidden>Employee ID is required.</small>
+          </div>
+
+          <div class="lg-field">
+            <label for="lgPass">Password <span class="req">*</span></label>
+            <div class="lg-pass">
+              <input id="lgPass" class="lg-input" type="password" autocomplete="current-password" placeholder="Enter password">
+              <button type="button" class="lg-eye" id="lgEye" aria-label="Show password" aria-pressed="false">
+                <svg id="lgEyeIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <small class="lg-error" id="lgPassErr" hidden>Password is required.</small>
+          </div>
+
+          <label class="lg-check"><input type="checkbox" id="lgRemember" checked> Remember me</label>
+          <button type="submit" class="lg-btn" id="lgSubmit">SIGN IN</button>
+          <div class="lg-forgot-row"><button type="button" class="lg-forgot" id="lgForgot">Forgot password?</button></div>
+        </form>
+      </div>
+    </section>
   </main>
 
   <!-- ================= APP ================= -->
@@ -539,9 +567,9 @@
       for (let d = 1; d <= total; d++) {
         const idx = first + d - 1, col = idx % 7, row = Math.floor(idx / 7);
         const x = 161 + col * 44, y = 204 + row * 40;
-        const hl = d === 1 ? '#2ec4b6' : d === 8 ? '#ff8a65' : d === 15 ? '#ffd166' : null;
-        const bg = hl || (col === 0 ? '#fde9c8' : '#eef7f6');
-        const fg = hl ? (d === 15 ? '#5a4300' : '#fff') : (col === 0 ? '#b54708' : '#4f6f6a');
+        const hl = d === 1 ? '#0072BC' : d === 8 ? '#5aa9db' : d === 15 ? '#fbbf24' : null;
+        const bg = hl || (col === 0 ? '#fde9c8' : '#eaf4fb');
+        const fg = hl ? (d === 15 ? '#5a4300' : '#fff') : (col === 0 ? '#b54708' : '#345b7a');
         out += `<rect x="${x}" y="${y}" width="34" height="32" rx="9" fill="${bg}"/>` + T(x + 17, y + 21, d, fg);
       }
       $('lgCal').innerHTML = out;
